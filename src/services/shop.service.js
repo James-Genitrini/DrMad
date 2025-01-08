@@ -48,10 +48,8 @@ async function shopLogin(data) {
 async function getAllViruses() {
   let response = null;
   try {
-    // changer la méthode appelée quand cette fonctionnalité l'API est prÃªte
     response = await getAllVirusesFromLocalSource()
   }
-  // NB: le catch n'aura lieu que pour des requÃªte vers l'API, s'il y a une erreur réseau
   catch(err) {
     response = {error: 1, status: 404, data: 'erreur réseau, impossible de récupérer la liste des viruses'  }
   }
@@ -71,7 +69,7 @@ async function getBasket(userId) {
 
 async function updateBasket(userId, itemId, amount) {
   try {
-    const response = await LocalSource.updateUserBasket(userId, itemId, amount); // Appel à controller.js
+    const response = await LocalSource.updateUserBasket(userId, itemId, amount);
     return response;
   } catch (error) {
     return { error: 1, data: 'Erreur lors de la mise à jour du panier' };
@@ -143,6 +141,8 @@ async function getOrders(userId) {
   }
 }
 
+
+
 async function cancelOrder(userId, orderId) {
   try {
     const response = await LocalSource.cancelOrder(userId, orderId);
@@ -165,5 +165,5 @@ export default {
   createOrder,
   payOrder,
   getOrders,
-  cancelOrder,
+  cancelOrder
 }

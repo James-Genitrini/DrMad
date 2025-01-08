@@ -1,52 +1,38 @@
 import ShopService from '../services/shop.service'
+import Vue from 'vue'
 
 export default {
   namespaced: true,
   state: () => ({
     viruses: [],
     shopUser: null,
-    basket: [],  
-    orders: [] 
+    basket: [],
   }),
   mutations: {
     updateViruses(state, viruses) {
       state.viruses = viruses
     },
     updateShopUser(state, user) {
-      state.shopUser = user;
-      if (!state.shopUser.orders) {
-        this.$set(state.shopUser, 'orders', []);
-      }
+      console.log('Utilisateur mis à jour:', user);
+      // Utilise Vue.set pour rendre l'ajout de propriétés réactif
+      Vue.set(state, 'shopUser', user);
     },
     updateBasket(state, basket) {
       state.basket = basket
     },
     addToBasket(state, { item, quantity }) {
-      const existingItem = state.basket.find(i => i.item.id === item.id);
+      const existingItem = state.basket.find(i => i.item.id === item.id)
       if (existingItem) {
-        existingItem.amount += quantity;
+        existingItem.amount += quantity
       } else {
-        state.basket.push({ item, amount: quantity });
+        state.basket.push({ item, amount: quantity })
       }
     },
-  
     removeFromBasket(state, itemId) {
-      state.basket = state.basket.filter(item => item.item.id !== itemId) 
+      state.basket = state.basket.filter(item => item.item.id !== itemId)
     },
     clearBasket(state) {
-      state.basket = []  
-    },
-    // Mutations pour gérer les commandes
-    updateOrders(state, orders) {
-      if (state.shopUser) {
-        this.$set(state.shopUser, 'orders', orders);
-      }
-    },
-    updateOrderStatus(state, { orderId, status }) {
-      const order = state.shopUser.orders.find(o => o.uuid === orderId);
-      if (order) {
-        order.status = status;
-      }
+      state.basket = []
     },
   },
   actions: {
@@ -74,73 +60,32 @@ export default {
         console.log('Récupération du panier');
         const response = await ShopService.getBasket(state.shopUser.id);
         if (response.error === 0) {
-          commit('updateBasket', response.data);  
+          commit('updateBasket', response.data);
         } else {
           console.log(response.data);
         }
       }
     },
-    async addItemToBasket({ commit }, { item, quantity }) {
+    async addItemToBasket({ commit, state }, { item, quantity }) {
       commit('addToBasket', { item, quantity });
-    },  
+      if (state.shopUser) {
+        console.log('Mise à jour du panier');
+        await ShopService.updateBasket(state.shopUser.id, state.basket);
+      }
+    },
     async removeItemFromBasket({ commit, state }, itemId) {
       commit('removeFromBasket', itemId);
       if (state.shopUser) {
         console.log('Mise à jour après suppression de l\'item');
-        await ShopService.updateBasket(state.shopUser.id, state.basket);  
+        await ShopService.updateBasket(state.shopUser.id, state.basket);
       }
     },
     async clearBasket({ commit, state }) {
       commit('clearBasket');
       if (state.shopUser) {
         console.log('Panier vidé');
-        await ShopService.clearBasket(state.shopUser.id);  
-      }
-    },
-    // Actions pour gérer les commandes
-    async createOrder({ commit, state }) {
-      if (state.shopUser && state.basket.length > 0) {
-        console.log('Création d\'une commande');
-        const orderData = {
-          items: state.basket.map(item => ({
-            item: {
-              name: item.item.name,
-              description: item.item.description,
-              price: item.item.price,
-              promotion: item.item.promotion || [],
-              object: item.item.object,
-            },
-            amount: item.amount,
-          })),
-          total: state.basket.reduce((sum, item) => sum + (item.item.price * item.amount), 0),
-        };
-
-        const response = await ShopService.createOrder(state.shopUser.id, orderData);
-        if (response.error === 0) {
-          commit('clearBasket'); 
-          commit('updateOrders', response.data.orders); 
-          this.$router.push(`/shop/pay/${response.data.uuid}`); 
-        } else {
-          console.log('Erreur lors de la création de la commande', response.data);
-        }
-      }
-    },
-    async payOrder({ commit, state }, orderId) {
-      const response = await ShopService.payOrder(state.shopUser.id, orderId);
-      if (response.error === 0) {
-        commit('updateOrderStatus', { orderId, status: 'finalized' });
-        this.$router.push('/shop/orders'); 
-      } else {
-        console.log('Erreur lors du paiement', response.data);
-      }
-    },
-    async cancelOrder({ commit, state }, orderId) {
-      const response = await ShopService.cancelOrder(state.shopUser.id, orderId);
-      if (response.error === 0) {
-        commit('updateOrderStatus', { orderId, status: 'cancelled' });
-      } else {
-        console.log('Erreur lors de l\'annulation', response.data);
+        await ShopService.clearBasket(state.shopUser.id);
       }
     },
   },
-};
+}

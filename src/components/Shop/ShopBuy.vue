@@ -77,7 +77,6 @@
         }
     },
 
-
       removeFromBasket(itemId) {
         this.$store.dispatch('shop/removeItemFromBasket', itemId);
       },
