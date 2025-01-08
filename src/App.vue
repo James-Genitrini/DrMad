@@ -32,7 +32,7 @@ export default {
     ...mapActions(['getAllViruses']),
     menuClicked(index) {
       console.log(index + ' clicked')
-      if (index === 0) { this.$router.push('/shop/items'); }
+      if (index === 0) { this.$router.push('/shop/buy'); }
       else if (index === 1) { this.$router.push('/bank/account'); }
       else if (index === 2) { this.$router.push(('/shop/login')); }
     }
