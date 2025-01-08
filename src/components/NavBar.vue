@@ -1,17 +1,40 @@
 <template>
   <div class="navbar">
-    <button v-for="(title, index) in titles" :key="index" :style="{ color: title.color, borderColor: title.color }"
-      @click="menuClicked(index)">{{ title.text }}</button>
+    <div class="navbar-links">
+      <router-link to="/shop/buy" v-if="isAuthenticated">Boutique</router-link>
+
+      <router-link to="/shop/orders" v-if="isAuthenticated">Mes Commandes</router-link>
+
+      <router-link to="/shop/login" v-if="!isAuthenticated">Se connecter</router-link>
+
+      <button v-if="isAuthenticated" @click="logout">Se déconnecter</button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'NavBar',
-  props: { titles: Array },
+  data() {
+    return {
+      isAuthenticated: false
+    }
+  },
+  created() {
+    this.checkAuthentication();
+  },
   methods: {
-    menuClicked(index) {
-      this.$emit('menu-clicked', index);
+    checkAuthentication() {
+      const user = localStorage.getItem('user');
+      if (user) {
+        this.isAuthenticated = true;
+      } else {
+        this.isAuthenticated = false;
+      }
+    },
+    logout() {
+      localStorage.removeItem('user');  
+      this.isAuthenticated = false;
+      this.$router.push('/shop/login');  
     }
   }
 }
@@ -19,25 +42,33 @@ export default {
 
 <style scoped>
 .navbar {
+  background-color: #282c34;
+  padding: 15px;
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
 }
 
-button {
-  margin: 3px;
-  padding: 8px;
-  font-size: 13px;
+.navbar-links {
+  display: flex;
+  gap: 15px;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.navbar-links button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
   cursor: pointer;
-  border: 1.5px solid;
-  border-radius: 5px;
-  background-color: transparent !important;
-  transition: all 0.5s;
 }
 
-button:hover {
-  -webkit-box-shadow: 0px 0px 200px 80px;
-  -moz-box-shadow: 0px 0px 200px 80px;
-  box-shadow: 0px 0px 200px 80px;
+.navbar-links button:hover {
+  background-color: #45a049;
 }
 </style>

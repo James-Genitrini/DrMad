@@ -73,9 +73,142 @@ function getAccountTransactions(number) {
 
 
 
+function getUserBasket(userId) {
+  const user = shopusers.find(u => u._id === userId);
+  if (user && user.basket) {
+    return { error: 0, data: user.basket };
+  } else {
+    return { error: 1, data: 'Panier introuvable' };
+  }
+}
+
+
+
+function updateUserBasket(userId, itemId, amount) {
+  const user = shopusers.find(u => u._id === userId);
+  if (!user) {
+    return { error: 1, data: 'Utilisateur introuvable' };
+  }
+
+  if (!user.basket) {
+    user.basket = { items: [] };
+  }
+
+  const itemIndex = user.basket.items.findIndex(item => item.item.toString() === itemId.toString());
+
+  if (itemIndex >= 0) {
+    user.basket.items[itemIndex].amount += amount;
+  } else {
+    user.basket.items.push({ item: itemId, amount });
+  }
+
+  return { error: 0, data: user.basket };
+}
+
+
+
+function removeItemFromUserBasket(userId, itemId) {
+  const user = shopusers.find(u => u._id === userId);
+  if (!user || !user.basket) {
+    return { error: 1, data: 'Panier ou utilisateur introuvable' };
+  }
+
+  // Filtre l'item à supprimer
+  user.basket.items = user.basket.items.filter(item => item.item.toString() !== itemId.toString());
+
+  return { error: 0, data: user.basket };
+}
+
+
+
+function clearUserBasket(userId) {
+  const user = shopusers.find(u => u._id === userId);
+  if (!user) {
+    return { error: 1, data: 'Utilisateur introuvable' };
+  }
+
+  user.basket = { items: [] }; // Vide le panier
+  return { error: 0, data: user.basket };
+}
+
+
+
+const shopUsers = require('./data').shopUsers;  
+
+function addOrderToUser(userId, order) {
+  const user = shopUsers.find(u => u.id === userId);
+  if (user) {
+    user.orders.push(order);  
+    return { data: { uuid: order.uuid } };  
+  }
+  return { error: 1, message: "Utilisateur non trouvé" };
+}
+
+
+
+function payOrder(userId, orderId) {
+  const user = shopUsers.find(u => u._id === userId);
+  
+  if (!user) {
+    return { error: 1, message: "Utilisateur introuvable." };
+  }
+
+  const order = user.orders.find(o => o.uuid === orderId);
+  
+  if (!order) {
+    return { error: 1, message: "Commande introuvable." };
+  }
+
+  if (order.status === 'finalized') {
+    return { error: 1, message: "Cette commande est déjà finalisée." };
+  }
+
+  order.status = 'finalized';
+
+  return { error: 0, message: "Commande finalisée.", data: { uuid: orderId } };
+}
+
+
+
+function getOrders(userId) {
+  const user = shopUsers.find(u => u.id === userId);
+  if (!user) {
+    return { error: 1, message: "Utilisateur introuvable." };
+  }
+  return { error: 0, data: user.orders || [] };
+}
+
+
+
+function cancelOrder(userId, orderId) {
+  const user = shopUsers.find(u => u.id === userId);
+  if (!user) {
+    return { error: 1, message: "Utilisateur introuvable." };
+  }
+
+  const order = user.orders.find(o => o.uuid === orderId);
+  if (!order) {
+    return { error: 1, message: "Commande introuvable." };
+  }
+
+  order.status = 'cancelled';
+
+  return { error: 0, message: "Commande annulée." };
+}
+
+
+
 export default {
   shopLogin,
   getAllViruses,
   getAccountAmount,
   getAccountTransactions,
+  getUserBasket,
+  updateUserBasket,
+  removeItemFromUserBasket,
+  clearUserBasket,
+  addOrderToUser,
+  payOrder,
+  getOrders,
+  cancelOrder,
 }
