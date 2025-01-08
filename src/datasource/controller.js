@@ -136,7 +136,7 @@ function clearUserBasket(userId) {
 const shopUsers = require('./data').shopUsers;  
 
 function addOrderToUser(userId, order) {
-  const user = shopUsers.find(u => u.id === userId);
+  const user = shopUsers.find(u => u._id === userId);
   if (user) {
     user.orders.push(order);  
     return { data: { uuid: order.uuid } };  

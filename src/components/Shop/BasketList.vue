@@ -4,7 +4,7 @@
         <div v-for="(item, index) in basket" :key="index" class="basket-item">
         <div>
             <p>{{ item.item.name }} - {{ item.amount }} x {{ item.item.price }}€</p>
-            <button @click="removeFromBasket(item.item.id)">Supprimer</button>
+            <button @click="removeFromBasket(item.item._id)">Supprimer</button>
         </div>
         </div>
 
@@ -37,8 +37,9 @@ export default {
         await this.$store.dispatch('shop/clearBasket');
     },
 
-    // Méthode pour passer la commande
-    async checkout() {
+    async checkout() {  
+        console.log(this.shopUser)
+        console.log(this.basket.length)      
         if (this.shopUser && this.basket.length > 0) {
         const orderItems = this.basket.map(item => ({
             item: {
@@ -78,9 +79,10 @@ export default {
     },
     },
     async created() {
-    if (this.shopUser) {
-        await this.$store.dispatch('shop/fetchBasket');  
-    }
+        const user = localStorage.getItem('user');
+        if (user) {
+            this.$store.commit('shop/setShopUser', JSON.parse(user));
+        }
     },
 };
 </script>

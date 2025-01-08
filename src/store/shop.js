@@ -9,6 +9,9 @@ export default {
     basket: [],
   }),
   mutations: {
+    setShopUser(state, user) {
+      state.shopUser = user;
+    },
     updateViruses(state, viruses) {
       state.viruses = viruses
     },
@@ -16,7 +19,6 @@ export default {
       console.log('Utilisateur mis à jour:', user);
       Vue.set(state, 'shopUser', user);
       state.isAuthenticated = true;
-      state.user = user;  
     },
     updateBasket(state, basket) {
       state.basket = basket
@@ -43,10 +45,17 @@ export default {
     },
   },
   actions: {
+    created() {
+      const user = localStorage.getItem('user');
+      if (user) {
+        this.$store.commit('shop/setShopUser', JSON.parse(user));  
+      }
+    },    
     async shopLogin({ commit }, data) {
       console.log('Login');
       let response = await ShopService.shopLogin(data);
       if (response.error === 0) {
+        localStorage.setItem('user', JSON.stringify(response.data));
         commit('updateShopUser', response.data);
         await this.dispatch('shop/fetchBasket');
         return true;
@@ -96,5 +105,12 @@ export default {
         await ShopService.clearBasket(state.shopUser.id);
       }
     },
+    loadUserFromLocalStorage({ commit }) {
+      const user = localStorage.getItem('user');
+      if (user) {
+        commit('setShopUser', JSON.parse(user));  // Charge l'utilisateur dans Vuex
+      }
+    },
+  
   },
 }

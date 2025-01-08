@@ -13,7 +13,7 @@
               class="virus-card"
             >
               <div class="card-header">
-                <h3>{{ virus.name }} {{ virus._id }}</h3>
+                <h3>{{ virus.name }}</h3>
               </div>
               <div class="card-body">
                 <p>{{ virus.description }}</p>
