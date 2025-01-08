@@ -1,6 +1,8 @@
 <template>
   <div class="navbar">
     <div class="navbar-links">
+      <router-link to="/shop/home" v-if="isAuthenticated">Home</router-link>
+
       <router-link to="/shop/buy" v-if="isAuthenticated">Boutique</router-link>
 
       <router-link to="/shop/orders" v-if="isAuthenticated">Mes Commandes</router-link>
