@@ -37,6 +37,7 @@ export default {
       localStorage.removeItem('user');  
       this.isAuthenticated = false;
       this.$router.push('/shop');  
+      location.reload();
     }
   }
 }

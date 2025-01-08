@@ -25,11 +25,11 @@
         }
         console.log(data)
         const response = await this.$store.dispatch('shop/shopLogin', data)
+
         if (!response.error) {
-          this.$nextTick(() => {
-            this.$router.push('/shop/home');
-          });        
-      } else {
+          this.$router.push('/shop/home')
+          location.reload();
+        } else {
           this.loginError = true
         }
       }
