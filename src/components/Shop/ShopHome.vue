@@ -62,4 +62,23 @@ p {
 .shop-home > div {
   margin-top: 30px;
 }
+
+/* Style pour le conteneur de BasketList et ShopOrders */
+.shop-home > div {
+  display: inline-block; /* Pour centrer horizontalement */
+  text-align: left; /* Pour garder les éléments à gauche */
+  max-width: 800px; /* Limite la largeur */
+  padding: 20px; /* Espace autour des éléments */
+  background-color: white; /* Fond blanc */
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère autour de l'encadré */
+  margin-top: 30px; /* Espacement entre les sections */
+  width: 100%; /* Prend toute la largeur disponible dans un conteneur parent */
+}
+
+/* Optionnel : Si tu veux ajuster les marges internes des composants BasketList et ShopOrders */
+.shop-home > div > * {
+  margin-bottom: 20px;
+}
+
 </style>
