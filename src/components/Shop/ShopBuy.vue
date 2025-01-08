@@ -13,7 +13,7 @@
               class="virus-card"
             >
               <div class="card-header">
-                <h3>{{ virus.name }}</h3>
+                <h3>{{ virus.name }} {{ virus._id }}</h3>
               </div>
               <div class="card-body">
                 <p>{{ virus.description }}</p>
@@ -32,7 +32,7 @@
   
       <!-- Section Panier -->
       <div class="shop-buy-right">
-        <h2>Votre Panier</h2>
+        <h1>Votre Panier</h1>
   
         <!-- Wrapper pour le carré blanc contenant le panier -->
         <div class="card-container">
@@ -43,7 +43,7 @@
               class="basket-item"
             >
               <p>{{ item.item.name }} - {{ item.amount }} x {{ item.item.price }} €</p>
-              <button @click="removeFromBasket(item.item.id)">Supprimer</button>
+              <button @click="removeFromBasket(item.item._id)">Supprimer</button>
             </div>
             <button @click="clearBasket">Vider le panier</button>
           </div>
@@ -67,17 +67,23 @@
       }
     },
     methods: {
-    addToBasket(virus) {
-        const existingItem = this.$store.state.shop.basket.find(item => item.item.id === virus.id);
-    
-        if (existingItem) {
-        existingItem.amount += 1;
+      addToBasket(virus) {
+        // console.log(JSON.parse(JSON.stringify(this.$store.state.shop.basket)));
+        // console.log(virus._id);
+        // console.log(this.$store.state.shop.basket.map(item => item.item._id));  // Affiche les IDs dans le panier
+        const existingItem = this.$store.state.shop.basket.find(itemBasket => itemBasket.item._id === virus._id);
+        console.log(existingItem !== undefined)
+        if (existingItem !== undefined) {
+            existingItem.amount += 1;
         } else {
-        this.$store.dispatch('shop/addItemToBasket', { item: virus, quantity: 1 });
-        }
-    },
+            // console.log("boucle add")
+            // console.log(virus)
+            this.$store.commit('shop/addToBasket', { item: virus, amount: 1 });
+          }
+      },
 
       removeFromBasket(itemId) {
+        console.log(itemId)
         this.$store.dispatch('shop/removeItemFromBasket', itemId);
       },
       clearBasket() {

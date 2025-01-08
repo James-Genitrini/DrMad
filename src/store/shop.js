@@ -14,18 +14,18 @@ export default {
     },
     updateShopUser(state, user) {
       console.log('Utilisateur mis à jour:', user);
-      // Utilise Vue.set pour rendre l'ajout de propriétés réactif
       Vue.set(state, 'shopUser', user);
     },
     updateBasket(state, basket) {
       state.basket = basket
     },
-    addToBasket(state, { item, quantity }) {
-      const existingItem = state.basket.find(i => i.item.id === item.id)
+    addToBasket(state, { item, amount }) {
+      const existingItem = state.basket.find(i => i.item._id === item.id)
+      console.log("Amount",amount)
       if (existingItem) {
-        existingItem.amount += quantity
+        existingItem.amount += 1
       } else {
-        state.basket.push({ item, amount: quantity })
+        state.basket.push({ item, amount: amount })
       }
     },
     removeFromBasket(state, itemId) {
@@ -70,7 +70,7 @@ export default {
       commit('addToBasket', { item, quantity });
       if (state.shopUser) {
         console.log('Mise à jour du panier');
-        await ShopService.updateBasket(state.shopUser.id, state.basket);
+        await ShopService.updateBasket(state.shopUser._id, state.basket);
       }
     },
     async removeItemFromBasket({ commit, state }, itemId) {
