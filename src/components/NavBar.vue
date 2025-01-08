@@ -5,7 +5,7 @@
 
       <router-link to="/shop/orders" v-if="isAuthenticated">Mes Commandes</router-link>
 
-      <router-link to="/shop/login" v-if="!isAuthenticated">Se connecter</router-link>
+      <router-link to="/shop/" v-if="!isAuthenticated">Se connecter</router-link>
 
       <button v-if="isAuthenticated" @click="logout">Se déconnecter</button>
     </div>
@@ -34,7 +34,7 @@ export default {
     logout() {
       localStorage.removeItem('user');  
       this.isAuthenticated = false;
-      this.$router.push('/shop/login');  
+      this.$router.push('/shop');  
     }
   }
 }

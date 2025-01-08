@@ -83,7 +83,7 @@
       },
 
       removeFromBasket(itemId) {
-        console.log(itemId)
+        // console.log(itemId)
         this.$store.dispatch('shop/removeItemFromBasket', itemId);
       },
       clearBasket() {

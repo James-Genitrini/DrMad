@@ -15,10 +15,16 @@ export default {
     updateShopUser(state, user) {
       console.log('Utilisateur mis à jour:', user);
       Vue.set(state, 'shopUser', user);
+      state.isAuthenticated = true;
+      state.user = user;  
     },
     updateBasket(state, basket) {
       state.basket = basket
     },
+    logout(state) {
+      state.isAuthenticated = false;
+      state.user = null;
+    },  
     addToBasket(state, { item, amount }) {
       const existingItem = state.basket.find(i => i.item._id === item.id)
       console.log("Amount",amount)
@@ -29,7 +35,8 @@ export default {
       }
     },
     removeFromBasket(state, itemId) {
-      state.basket = state.basket.filter(item => item.item.id !== itemId)
+      // console.log(itemId)
+      state.basket = state.basket.filter(item => item.item._id !== itemId)
     },
     clearBasket(state) {
       state.basket = []
@@ -42,6 +49,7 @@ export default {
       if (response.error === 0) {
         commit('updateShopUser', response.data);
         await this.dispatch('shop/fetchBasket');
+        return true;
       } else {
         console.log(response.data);
       }
@@ -74,6 +82,7 @@ export default {
       }
     },
     async removeItemFromBasket({ commit, state }, itemId) {
+      // console.log(itemId)
       commit('removeFromBasket', itemId);
       if (state.shopUser) {
         console.log('Mise à jour après suppression de l\'item');

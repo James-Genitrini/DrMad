@@ -1,7 +1,7 @@
 <template>
     <div class="shop-login">
-      <h1>Connexion à la boutique</h1>
-      <input type="text" v-model="username" placeholder="Nom d'utilisateur" />
+      <h1>Connexion à la boutique </h1>
+      <input type="text" v-model="login" placeholder="Nom d'utilisateur" />
       <input type="password" v-model="password" placeholder="Mot de passe" />
       <button @click="handleLogin">Se connecter</button>
       <p v-if="loginError" class="error">Erreur de connexion, essayez à nouveau.</p>
@@ -12,7 +12,7 @@
   export default {
     data() {
       return {
-        username: '',
+        login: '',
         password: '',
         loginError: false
       }
@@ -20,13 +20,16 @@
     methods: {
       async handleLogin() {
         const data = {
-          username: this.username,
+          login: this.login,
           password: this.password,
         }
+        console.log(data)
         const response = await this.$store.dispatch('shop/shopLogin', data)
         if (!response.error) {
-          this.$router.push('/shop/home')
-        } else {
+          this.$nextTick(() => {
+            this.$router.push('/shop/home');
+          });        
+      } else {
           this.loginError = true
         }
       }
