@@ -1,25 +1,40 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VirusesView from '../views/VirusesView.vue'
+
+import ShopHome from '../components/Shop/ShopHome.vue'
+import ShopLogin from '../components/Shop/ShopLogin.vue'
+import ShopBuy from '../components/Shop/ShopBuy.vue'
+import ShopPay from '../components/Shop/ShopPay.vue'
+import ShopOrders from '../components/Shop/ShopOrders.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/shop/items',
-    name: 'shopitems',
-    component: VirusesView
+    path: '/shop',
+    component: ShopHome,
+    alias: '/shop/home', 
   },
   {
     path: '/shop/login',
     name: 'shoplogin',
-    // import dynamique du composant, plutôt qu'en début de fichier, comme la route prédécente.
-    component: () => import('../views/ShopLoginView.vue')
+    component: ShopLogin
   },
   {
-    path: '/bank/account',
-    name: 'bankaccount',
-    component: () => import('../views/BankAccountView.vue')
+    path: '/shop/buy',
+    name: 'shopbuy',
+    component: ShopBuy
+  },
+  {
+    path: '/shop/pay/:orderId',
+    name: 'shopPay',
+    component: ShopPay,
+    props: true 
+  },
+  {
+    path: '/shop/orders',
+    name: 'shoporders',
+    component: ShopOrders
   }
 ]
 
