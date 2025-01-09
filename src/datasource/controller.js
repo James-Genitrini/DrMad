@@ -169,7 +169,7 @@ function payOrder(userId, orderId) {
 function getOrders(userId) {
   // console.log(userId)
   const user = shopusers.find(u => u._id === userId);
-  console.log("User récupérer:",user)
+  // console.log("User récupérer:",user)
   if (user === undefined) {
     return { error: 1, message: "Utilisateur introuvable." };
   }
