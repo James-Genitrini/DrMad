@@ -63,7 +63,6 @@ p {
   margin-top: 30px;
 }
 
-/* Style pour le conteneur de BasketList et ShopOrders */
 .shop-home > div {
   display: inline-block; /* Pour centrer horizontalement */
   text-align: left; /* Pour garder les éléments à gauche */

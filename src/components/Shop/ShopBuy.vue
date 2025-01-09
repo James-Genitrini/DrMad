@@ -1,10 +1,8 @@
 <template>
     <div class="shop-buy">
-      <!-- Section Liste des Virus -->
       <div class="shop-buy-left">
         <h1>Liste des Virus</h1>
   
-        <!-- Wrapper pour le carré blanc contenant les virus -->
         <div class="card-container">
           <div v-if="viruses.length">
             <div

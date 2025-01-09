@@ -33,8 +33,9 @@ const routes = [
   },
   {
     path: '/shop/orders',
-    name: 'shoporders',
-    component: ShopOrders
+    name: 'shopOrders',
+    component: ShopOrders,
+    meta: { requiresAuth: true }
   }
 ]
 
