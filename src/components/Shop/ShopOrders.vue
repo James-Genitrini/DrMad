@@ -6,7 +6,7 @@
       <div>
         <span><strong>Montant :</strong> {{ order.total }} €</span><br>
         <span><strong>Status :</strong> {{ order.status }}</span><br>
-        <span><strong>Uuid :</strong> {{ order.uuid }}</span>
+        <!-- <span><strong>Uuid :</strong> {{ order.uuid }}</span> -->
       </div>
       <div v-if="order.status === 'waiting_payment'">
         <button @click="payOrder(order.uuid)">Payer</button>

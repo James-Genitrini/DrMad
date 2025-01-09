@@ -57,8 +57,8 @@ export default {
                 };
 
                 const response = await ShopService.createOrder(this.shopUser._id, order);
-                console.log(response)
-                console.log(response.data.uuid)
+                // console.log(response)
+                // console.log(response.data.uuid)
                 if (response != undefined && response.data.uuid != undefined) {
                     this.clearBasket();
                     this.$router.push(`/shop/pay/${response.data.uuid}`);
