@@ -133,10 +133,9 @@ function clearUserBasket(userId) {
 
 
 
-const shopUsers = require('./data').shopUsers;  
 
 function addOrderToUser(userId, order) {
-  const user = shopUsers.find(u => u._id === userId);
+  const user = shopusers.find(u => u._id === userId);
   if (user) {
     user.orders.push(order);  
     return { data: { uuid: order.uuid } };  
@@ -147,20 +146,17 @@ function addOrderToUser(userId, order) {
 
 
 function payOrder(userId, orderId) {
-  const user = shopUsers.find(u => u._id === userId);
+  console.log(userId, orderId)
+  const user = shopusers.find(u => u._id === userId);
   
-  if (!user) {
+  if (user === undefined) {
     return { error: 1, message: "Utilisateur introuvable." };
   }
 
   const order = user.orders.find(o => o.uuid === orderId);
   
-  if (!order) {
+  if (order === undefined) {
     return { error: 1, message: "Commande introuvable." };
-  }
-
-  if (order.status === 'finalized') {
-    return { error: 1, message: "Cette commande est déjà finalisée." };
   }
 
   order.status = 'finalized';
@@ -184,13 +180,15 @@ function getOrders(userId) {
 
 
 function cancelOrder(userId, orderId) {
-  const user = shopUsers.find(u => u.id === userId);
-  if (!user) {
+  // console.log(userId, orderId);
+  const user = shopusers.find(u => u._id === userId);
+  console.log("user cancel", user);
+  if (user === undefined) {
     return { error: 1, message: "Utilisateur introuvable." };
   }
 
   const order = user.orders.find(o => o.uuid === orderId);
-  if (!order) {
+  if (order === undefined) {
     return { error: 1, message: "Commande introuvable." };
   }
 

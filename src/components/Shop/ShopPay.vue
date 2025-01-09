@@ -15,7 +15,8 @@
   
   <script>
   import ShopService from '@/services/shop.service';
-  
+  import { mapState } from 'vuex';  
+
   export default {
     name: 'ShopPay',
     props: {
@@ -26,6 +27,11 @@
         orderId: this.propsOrderId || ''
       };
     },
+    computed: {
+      ...mapState({
+        shopUser: (state) => state.shop.shopUser,
+      }),
+    },
     methods: {
       async payOrder() {
         try {
@@ -34,14 +40,14 @@
             return;
           }
   
-          const user = this.$store.state.shop.shopUser;
+          const user = this.shopUser;
   
-          if (!user) {
+          if (user === undefined) {
             alert("Vous devez être connecté pour effectuer cette action.");
             return;
           }
   
-          const response = await ShopService.payOrder(user.id, this.orderId);
+          const response = await ShopService.payOrder(user._id, this.orderId);
           
           if (response.error === 0) {
             alert('Commande payée avec succès !');

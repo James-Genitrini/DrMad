@@ -58,7 +58,7 @@ export default {
       this.$router.push(`/shop/pay/${orderId}`);
     },
     async cancelOrder(orderId) {
-      const response = await ShopService.cancelOrder(this.shopUser.id, orderId);
+      const response = await ShopService.cancelOrder(this.shopUser._id, orderId);
       if (response.error === 0) {
         const orderIndex = this.orders.findIndex(order => order.uuid === orderId);
         if (orderIndex !== -1) {
