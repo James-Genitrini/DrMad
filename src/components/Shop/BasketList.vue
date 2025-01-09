@@ -71,11 +71,20 @@ export default {
 
         calculateTotal() {
             return this.basket.reduce((total, item) => {
-                const itemPrice = item.item.price * item.amount;
-                const discount = item.item.promotion.reduce((acc, promo) => acc + (promo.discount * promo.amount), 0);
-                return total + itemPrice - discount;
+                const itemTotalPrice = item.item.price * item.amount;
+
+                const applicablePromo = item.item.promotion
+                .filter(promo => item.amount >= promo.amount) 
+                .sort((a, b) => b.amount - a.amount)[0]; 
+
+                const discount = applicablePromo 
+                ? (itemTotalPrice * applicablePromo.discount) / 100 
+                : 0;
+
+                return total + itemTotalPrice - discount;
             }, 0);
         },
+
     },
     async created() {
         const user = localStorage.getItem('user');

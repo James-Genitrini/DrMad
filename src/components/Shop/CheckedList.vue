@@ -2,19 +2,26 @@
   <div class="items">
     <ul>
       <li v-for="(item, index) in data" :key="index" style="display: flex; align-items: center;">
-        <!-- Case à cocher -->
-        <input v-if="itemCheck" type="checkbox" :checked="checked[index]" @change="$emit('checked-changed', index)"
-          style="margin-right: 10px;" />
+        <input
+          v-if="itemCheck"
+          type="checkbox"
+          :checked="checked[index]"
+          @change="toggleCheck(index)"
+          style="margin-right: 10px;"
+        />
 
-        <!-- Affichage des champs -->
         <span v-for="field in fields" :key="field" style="margin-right: 10px;">
           {{ item[field] }}
         </span>
 
-        <!-- Champ de quantité si itemAmount est true -->
-        <input v-if="itemAmount" type="number" v-model="quantities[index]" min="1" style="width: 50px; margin-right: 10px;" />
+        <input
+          v-if="itemAmount"
+          type="number"
+          v-model="quantities[index]"
+          min="1"
+          style="width: 50px; margin-right: 10px;"
+        />
 
-        <!-- Bouton d'ajout au panier -->
         <button v-if="itemButton && itemButton.show" @click="handleItemButtonClick(index)" style="margin-left: auto;">
           {{ itemButton.text }}
         </button>
@@ -38,27 +45,25 @@ export default {
     checked: Array,
     itemButton: Object,
     listButton: Object,
-    itemAmount: Boolean,  // Nouvelle prop pour gérer l'affichage des quantités
+    itemAmount: Boolean,  
   },
   data() {
     return {
-      quantities: []  // Tableau pour stocker les quantités de chaque item
-    }
+      quantities: Array(this.data.length).fill(1),     
+    };
   },
   methods: {
     handleItemButtonClick(index) {
-      // Si itemAmount est activé, on prend la quantité associée, sinon la valeur par défaut 1
       const quantity = this.itemAmount ? this.quantities[index] || 1 : 1;
       this.$emit('item-button-clicked', { index, quantity });
     },
     handleListButtonClick() {
-      // Envoi des données de tous les items sélectionnés et leurs quantités
       const selectedItems = this.data
         .map((item, index) => ({
           index,
           quantity: this.itemAmount ? this.quantities[index] || 1 : 1
         }))
-        .filter(item => this.checked[item.index]);  // Filtrer les items sélectionnés
+        .filter(item => this.checked[item.index]); 
 
       this.$emit('list-button-clicked', selectedItems);
     }
@@ -99,4 +104,13 @@ button:hover {
   box-shadow: 0px 0px 83px 15px;
   transition: all 0.5s ease-in;
 }
+
+input[type="number"] {
+  width: 60px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-right: 10px;
+}
+
 </style>

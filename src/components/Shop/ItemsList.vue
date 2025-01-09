@@ -1,43 +1,66 @@
 <template>
-  <div class="items">
-    <ul>
-      <li v-for="(item, index) in data" :key="index" style="display: flex; align-items: center;">
-        <input v-if="itemCheck" type="checkbox" :checked="checked[index]" @change="$emit('checked-changed', index)" style="margin-right: 10px;" />
-
-        <span v-for="field in fields" :key="field" style="margin-right: 10px;">
-          {{ item[field] }}
-        </span>
-
-        <input v-if="itemAmount" type="number" v-model="quantities[index]" min="1" style="width: 50px; margin-right: 10px;" />
-        <button v-if="itemButton && itemButton.show" @click="$emit('item-button-clicked', { index, quantity: quantities[index] || 1 })" style="margin-left: auto;">
-          {{ itemButton.text }}
-        </button>
-      </li>
-    </ul>
-
-    <button v-if="listButton && listButton.show" @click="$emit('list-button-clicked')" style="margin-top: 10px;">
-      {{ listButton.text }}
-    </button>
+  <div class="items-list">
+    <CheckedList
+      :data="viruses"
+      :fields="['name', 'price', 'promotion']"
+      :itemCheck="true"
+      :checked="checked"
+      :itemAmount="true"
+      :itemButton="{ show: true, text: 'Ajouter au panier' }"
+      :listButton="{ show: true, text: 'Ajouter tout au panier' }"
+      @item-button-clicked="addItemToBasket"
+      @list-button-clicked="addSelectedItemsToBasket"
+      @update:checked="updateChecked"
+    />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import CheckedList from './CheckedList.vue';
+
 export default {
   name: 'ItemsList',
-  props: {
-    data: Array,
-    fields: Array,
-    itemCheck: Boolean,
-    checked: Array,
-    itemButton: Object,
-    listButton: Object,
-    itemAmount: Boolean
-  },
+  components: { CheckedList },
   data() {
     return {
-      quantities: [] 
+      checked: [], 
     };
-  }
+  },
+  computed: {
+    ...mapState('shop', ['viruses', 'basket']),
+  },
+  methods: {
+    updateChecked(newChecked) {
+      this.checked = newChecked;
+    },
+    addItemToBasket({ index, quantity }) {
+      const virus = this.viruses[index];
+      const existingItem = this.basket.find(item => item.item._id === virus._id);
+
+      if (existingItem) {
+        this.$store.commit('shop/updateBasketQuantity', {
+          itemId: virus._id,
+          amount: quantity,
+        });
+      } else {
+        this.$store.commit('shop/addToBasket', {
+          item: virus,
+          amount: quantity,
+        });
+      }
+    },
+    addSelectedItemsToBasket(selectedItems) {
+      selectedItems.forEach(({ index, quantity }) => {
+        this.addItemToBasket({ index, quantity });
+      });
+
+      this.checked = this.checked.map(() => false);
+    },
+  },
+  created() {
+    this.checked = Array(this.viruses.length).fill(false);
+  },
 };
 </script>
 

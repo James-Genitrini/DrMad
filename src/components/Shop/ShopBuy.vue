@@ -14,7 +14,7 @@
             >
               <div class="card-header">
                 <h3>{{ virus.name }}</h3>
-              </div>
+              </div>     
               <div class="card-body">
                 <p>{{ virus.description }}</p>
                 <p><strong>{{ virus.price }} €</strong></p>
