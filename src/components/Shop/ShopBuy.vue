@@ -19,6 +19,14 @@
                 <p>{{ virus.description }}</p>
                 <p><strong>{{ virus.price }} €</strong></p>
               </div>
+              <div v-if="virus.promotion && virus.promotion.length">
+                <p>Promotions :</p>
+                <ul>
+                  <li v-for="promo in virus.promotion" :key="promo._id">
+                    - {{ promo.discount }}% sur {{ promo.amount }} unités
+                  </li>
+                </ul>
+              </div>
               <div class="card-footer">
                 <button @click="addToBasket(virus)">Ajouter au panier</button>
               </div>
@@ -176,6 +184,13 @@
   
   .basket-item button:hover {
     background-color: #d32f2f;
+  }
+
+  .card-body ul {
+    margin: 10px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+    color: #555;
   }
   </style>
   
