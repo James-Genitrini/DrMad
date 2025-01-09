@@ -56,11 +56,12 @@ export default {
                     total: this.calculateTotal(),
                 };
 
-                const response = await ShopService.createOrder(this.shopUser.id, order);
-
-                if (response && response.uuid) {
+                const response = await ShopService.createOrder(this.shopUser._id, order);
+                console.log(response)
+                console.log(response.data.uuid)
+                if (response != undefined && response.data.uuid != undefined) {
                     this.clearBasket();
-                    this.$router.push(`/shop/pay/${response.uuid}`);
+                    this.$router.push(`/shop/pay/${response.data.uuid}`);
                 } else {
                     alert('Erreur lors de la création de la commande. Veuillez réessayer.');
                 }
