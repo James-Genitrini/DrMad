@@ -1,6 +1,5 @@
 <template>
   <div class="shop-buy">
-    <!-- Section Liste des Virus -->
     <div class="shop-buy-left">
       <h1>Liste des Virus</h1>
 
@@ -38,7 +37,6 @@
                 placeholder="Quantité"
               />
 
-              <!-- Bouton Ajouter à l'unité ou quantité sélectionnée -->
               <button @click="addToBasket(virus)">Ajouter</button>
             </div>
           </div>
@@ -95,17 +93,14 @@ export default {
   },
   methods: {
     addToBasket(virus) {
-      // Récupérer la quantité à ajouter, ou 1 par défaut si non spécifiée
       const quantity = parseInt(this.quantities[virus._id]) || 1;
       const existingItem = this.$store.state.shop.basket.find(
         itemBasket => itemBasket.item._id === virus._id
       );
 
-      // Si l'article existe déjà dans le panier, on augmente la quantité
       if (existingItem) {
         existingItem.amount += quantity;
       } else {
-        // Sinon, on ajoute l'élément au panier
         this.$store.commit('shop/addToBasket', { item: virus, amount: quantity });
       }
     },
@@ -135,13 +130,10 @@ export default {
       }
     },
 
-    // Nouvelle méthode pour gérer la sélection et réinitialiser la quantité
     handleVirusSelectionChange(virus) {
       if (!this.selectedViruses.includes(virus)) {
-        // Si le virus est déselectionné, réinitialiser la quantité
-        this.$delete(this.quantities, virus._id); // Retirer la quantité de l'objet
+        this.$delete(this.quantities, virus._id); 
       } else {
-        // Si sélectionné, mettre la quantité par défaut à 1
         this.$set(this.quantities, virus._id, 1);
       }
     },

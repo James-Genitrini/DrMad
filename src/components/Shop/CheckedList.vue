@@ -28,7 +28,6 @@
       </li>
     </ul>
 
-    <!-- Bouton pour ajouter tous les items sélectionnés -->
     <button v-if="listButton && listButton.show" @click="handleListButtonClick" style="margin-top: 10px;">
       {{ listButton.text }}
     </button>
