@@ -27,7 +27,7 @@
               </ul>
             </div>
             <div class="card-footer">
-              <input type="checkbox" :value="virus" v-model="selectedViruses" @change="setDefaultQuantity(virus)" />
+              <input type="checkbox" :value="virus" v-model="selectedViruses" @change="handleVirusSelectionChange(virus)" />
 
               <input
                 v-if="isSelected(virus)"
@@ -37,6 +37,9 @@
                 :max="10"
                 placeholder="Quantité"
               />
+
+              <!-- Bouton Ajouter à l'unité ou quantité sélectionnée -->
+              <button @click="addToBasket(virus)">Ajouter</button>
             </div>
           </div>
         </div>
@@ -92,14 +95,17 @@ export default {
   },
   methods: {
     addToBasket(virus) {
-      const quantity = parseInt(this.quantities[virus._id]) || 1; 
+      // Récupérer la quantité à ajouter, ou 1 par défaut si non spécifiée
+      const quantity = parseInt(this.quantities[virus._id]) || 1;
       const existingItem = this.$store.state.shop.basket.find(
         itemBasket => itemBasket.item._id === virus._id
       );
-      console.log(existingItem)
+
+      // Si l'article existe déjà dans le panier, on augmente la quantité
       if (existingItem) {
-        existingItem.amount += quantity; 
+        existingItem.amount += quantity;
       } else {
+        // Sinon, on ajoute l'élément au panier
         this.$store.commit('shop/addToBasket', { item: virus, amount: quantity });
       }
     },
@@ -118,13 +124,24 @@ export default {
 
     addAllToBasket() {
       this.selectedViruses.forEach(virus => {
-        const quantity = this.quantities[virus._id] || 1; 
+        const quantity = this.quantities[virus._id] || 1;
         this.addToBasket(virus, quantity);
       });
     },
 
     setDefaultQuantity(virus) {
       if (this.selectedViruses.includes(virus)) {
+        this.$set(this.quantities, virus._id, 1);
+      }
+    },
+
+    // Nouvelle méthode pour gérer la sélection et réinitialiser la quantité
+    handleVirusSelectionChange(virus) {
+      if (!this.selectedViruses.includes(virus)) {
+        // Si le virus est déselectionné, réinitialiser la quantité
+        this.$delete(this.quantities, virus._id); // Retirer la quantité de l'objet
+      } else {
+        // Si sélectionné, mettre la quantité par défaut à 1
         this.$set(this.quantities, virus._id, 1);
       }
     },
