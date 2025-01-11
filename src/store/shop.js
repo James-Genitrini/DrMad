@@ -108,7 +108,7 @@ export default {
     loadUserFromLocalStorage({ commit }) {
       const user = localStorage.getItem('user');
       if (user) {
-        commit('setShopUser', JSON.parse(user));  // Charge l'utilisateur dans Vuex
+        commit('setShopUser', JSON.parse(user));  
       }
     },
   

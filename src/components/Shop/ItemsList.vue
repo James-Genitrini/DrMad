@@ -1,179 +1,193 @@
 <template>
-  <div class="items-list">
-    <CheckedList
-      :data="viruses"
-      :fields="['name', 'price', 'promotion']"
-      :itemCheck="true"
-      :checked="checked"
-      :itemAmount="true"
-      :itemButton="{ show: true, text: 'Ajouter au panier' }"
-      :listButton="{ show: true, text: 'Ajouter tout au panier' }"
-      @item-button-clicked="addItemToBasket"
-      @list-button-clicked="addSelectedItemsToBasket"
-      @update:checked="updateChecked"
-    />
+  <div class="shop-buy">
+    <!-- Section Liste des Virus -->
+    <div class="shop-buy-left">
+      <h1>Liste des Virus</h1>
+
+      <div class="card-container">
+        <div v-if="viruses.length">
+          <div
+            v-for="virus in viruses"
+            :key="virus.id"
+            class="virus-card"
+          >
+            <div class="card-header">
+              <h3>{{ virus.name }}</h3>
+            </div>
+            <div class="card-body">
+              <p>{{ virus.description }}</p>
+              <p><strong>{{ virus.price }} €</strong></p>
+            </div>
+            <div v-if="virus.promotion && virus.promotion.length">
+              <p>Promotions :</p>
+              <ul>
+                <li v-for="promo in virus.promotion" :key="promo._id">
+                  - {{ promo.discount }}% sur {{ promo.amount }} unités
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <button @click="addToBasket(virus)">Ajouter au panier</button>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <p>Les virus sont en cours de chargement...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Panier -->
+    <div class="shop-buy-right">
+      <h1>Votre Panier</h1>
+
+      <!-- Wrapper pour le carré blanc contenant le panier -->
+      <div class="card-container">
+        <div v-if="basket.length">
+          <div
+            v-for="item in basket"
+            :key="item.item.id"
+            class="basket-item"
+          >
+            <p>{{ item.item.name }} - {{ item.amount }} x {{ item.item.price }} €</p>
+            <button @click="removeFromBasket(item.item._id)">Supprimer</button>
+          </div>
+          <button @click="clearBasket">Vider le panier</button>
+        </div>
+        <div v-else>
+          <p>Le panier est vide.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import CheckedList from './CheckedList.vue';
-
 export default {
   name: 'ItemsList',
-  components: { CheckedList },
-  data() {
-    return {
-      checked: [], 
-    };
-  },
   computed: {
-    ...mapState('shop', ['viruses', 'basket']),
+    viruses() {
+      return this.$store.state.shop.viruses; // Récupère les virus depuis Vuex
+    },
+    basket() {
+      return this.$store.state.shop.basket; // Récupère le panier depuis Vuex
+    },
   },
   methods: {
-    updateChecked(newChecked) {
-      this.checked = newChecked;
-    },
-    addItemToBasket({ index, quantity }) {
-      const virus = this.viruses[index];
-      const existingItem = this.basket.find(item => item.item._id === virus._id);
+    addToBasket(virus) {
+      // Vérifie si l'élément existe déjà dans le panier
+      const existingItem = this.$store.state.shop.basket.find(
+        itemBasket => itemBasket.item._id === virus._id
+      );
 
       if (existingItem) {
-        this.$store.commit('shop/updateBasketQuantity', {
-          itemId: virus._id,
-          amount: quantity,
-        });
+        existingItem.amount += 1; // Incrémente la quantité si l'élément est déjà dans le panier
       } else {
-        this.$store.commit('shop/addToBasket', {
-          item: virus,
-          amount: quantity,
-        });
+        this.$store.commit('shop/addToBasket', { item: virus, amount: 1 });
       }
     },
-    addSelectedItemsToBasket(selectedItems) {
-      selectedItems.forEach(({ index, quantity }) => {
-        this.addItemToBasket({ index, quantity });
-      });
-
-      this.checked = this.checked.map(() => false);
+    removeFromBasket(itemId) {
+      // Supprime un élément du panier
+      this.$store.dispatch('shop/removeItemFromBasket', itemId);
+    },
+    clearBasket() {
+      // Vide le panier
+      this.$store.dispatch('shop/clearBasket');
     },
   },
   created() {
-    this.checked = Array(this.viruses.length).fill(false);
+    // Charge les virus au montage du composant
+    this.$store.dispatch('shop/getAllViruses');
   },
 };
 </script>
 
 <style scoped>
-.items-list {
+.shop-buy {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.shop-buy-left,
+.shop-buy-right {
+  width: 48%;
+}
+
+.card-container {
+  background-color: #fff;
   padding: 20px;
-  background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.virus-card,
+.basket-item {
   margin-bottom: 20px;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background-color: #fff;
+.virus-card {
+  background-color: #f9f9f9;
   border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.2s;
 }
 
-.item-checkbox {
-  margin-right: 10px;
+.virus-card:hover {
+  transform: translateY(-5px);
 }
 
-.item-details {
-  flex-grow: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.item-name {
-  font-size: 16px;
-  font-weight: bold;
+.card-header h3 {
+  font-size: 1.5em;
   color: #333;
 }
 
-.item-price {
-  font-size: 14px;
-  color: #4CAF50;
-  font-weight: bold;
+.card-body {
+  margin-top: 10px;
 }
 
-.item-promo {
-  font-size: 12px;
-  color: #FF5722;
-  text-transform: uppercase;
-  font-weight: bold;
+.card-footer {
+  margin-top: 15px;
+  text-align: center;
 }
 
-.item-quantity {
-  width: 60px;
-  padding: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-left: 10px;
-}
-
-.item-button {
+button {
+  padding: 10px;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 5px;
-  padding: 8px 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 5px;
 }
 
-.item-button:hover {
+button:hover {
   background-color: #45a049;
 }
 
-.list-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
-  width: 100%;
-  transition: background-color 0.3s ease;
+.shop-buy-right {
+  padding-top: 20px;
 }
 
-.list-button:hover {
-  background-color: #0056b3;
+.basket-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@media screen and (max-width: 768px) {
-  .items-list {
-    padding: 15px;
-  }
+.basket-item button {
+  background-color: #f44336;
+}
 
-  .item-details {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.basket-item button:hover {
+  background-color: #d32f2f;
+}
 
-  .item-quantity {
-    margin-top: 10px;
-  }
-
-  .item-name, .item-price, .item-promo {
-    margin-bottom: 5px;
-  }
+.card-body ul {
+  margin: 10px 0;
+  padding-left: 20px;
+  list-style-type: disc;
+  color: #555;
 }
 </style>
