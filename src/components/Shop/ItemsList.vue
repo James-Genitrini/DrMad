@@ -27,7 +27,16 @@
               </ul>
             </div>
             <div class="card-footer">
-              <button @click="addToBasket(virus)">Ajouter au panier</button>
+              <input type="checkbox" :value="virus" v-model="selectedViruses" @change="setDefaultQuantity(virus)" />
+
+              <input
+                v-if="isSelected(virus)"
+                type="number"
+                v-model="quantities[virus._id]"
+                min="1"
+                :max="10"
+                placeholder="Quantité"
+              />
             </div>
           </div>
         </div>
@@ -35,13 +44,15 @@
           <p>Les virus sont en cours de chargement...</p>
         </div>
       </div>
+
+      <div v-if="selectedViruses.length">
+        <button @click="addAllToBasket">Ajouter tout</button>
+      </div>
     </div>
 
-    <!-- Section Panier -->
     <div class="shop-buy-right">
       <h1>Votre Panier</h1>
 
-      <!-- Wrapper pour le carré blanc contenant le panier -->
       <div class="card-container">
         <div v-if="basket.length">
           <div
@@ -65,38 +76,61 @@
 <script>
 export default {
   name: 'ItemsList',
+  data() {
+    return {
+      selectedViruses: [],
+      quantities: {},
+    };
+  },
   computed: {
     viruses() {
-      return this.$store.state.shop.viruses; // Récupère les virus depuis Vuex
+      return this.$store.state.shop.viruses;
     },
     basket() {
-      return this.$store.state.shop.basket; // Récupère le panier depuis Vuex
+      return this.$store.state.shop.basket;
     },
   },
   methods: {
     addToBasket(virus) {
-      // Vérifie si l'élément existe déjà dans le panier
+      const quantity = parseInt(this.quantities[virus._id]) || 1; 
       const existingItem = this.$store.state.shop.basket.find(
         itemBasket => itemBasket.item._id === virus._id
       );
-
+      console.log(existingItem)
       if (existingItem) {
-        existingItem.amount += 1; // Incrémente la quantité si l'élément est déjà dans le panier
+        existingItem.amount += quantity; 
       } else {
-        this.$store.commit('shop/addToBasket', { item: virus, amount: 1 });
+        this.$store.commit('shop/addToBasket', { item: virus, amount: quantity });
       }
     },
+
     removeFromBasket(itemId) {
-      // Supprime un élément du panier
       this.$store.dispatch('shop/removeItemFromBasket', itemId);
     },
+
     clearBasket() {
-      // Vide le panier
       this.$store.dispatch('shop/clearBasket');
     },
+
+    isSelected(virus) {
+      return this.selectedViruses.includes(virus);
+    },
+
+    addAllToBasket() {
+      this.selectedViruses.forEach(virus => {
+        const quantity = this.quantities[virus._id] || 1; 
+        this.addToBasket(virus, quantity);
+      });
+    },
+
+    setDefaultQuantity(virus) {
+      if (this.selectedViruses.includes(virus)) {
+        this.$set(this.quantities, virus._id, 1);
+      }
+    },
   },
+
   created() {
-    // Charge les virus au montage du composant
     this.$store.dispatch('shop/getAllViruses');
   },
 };
@@ -189,5 +223,12 @@ button:hover {
   padding-left: 20px;
   list-style-type: disc;
   color: #555;
+}
+
+input[type="number"] {
+  width: 60px;
+  padding: 5px;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>
