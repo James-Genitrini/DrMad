@@ -3,10 +3,26 @@
     <div class="shop-buy-left">
       <h1>Liste des Virus</h1>
 
+      <!-- Filtres -->
+      <div class="filters">
+        <input
+          type="text"
+          v-model="filters.name"
+          placeholder="Rechercher par nom"
+        />
+        <input
+          type="number"
+          v-model.number="filters.maxPrice"
+          placeholder="Prix max (€)"
+          min="0"
+        />
+        <button @click="resetFilters">Réinitialiser</button>
+      </div>
+
       <div class="card-container">
-        <div v-if="viruses.length">
+        <div v-if="filteredViruses.length">
           <div
-            v-for="virus in viruses"
+            v-for="virus in filteredViruses"
             :key="virus.id"
             class="virus-card"
           >
@@ -42,7 +58,7 @@
           </div>
         </div>
         <div v-else>
-          <p>Les virus sont en cours de chargement...</p>
+          <p>Aucun virus ne correspond à vos critères...</p>
         </div>
       </div>
 
@@ -81,6 +97,10 @@ export default {
     return {
       selectedViruses: [],
       quantities: {},
+      filters: {
+        name: '',
+        maxPrice: null,
+      },
     };
   },
   computed: {
@@ -89,6 +109,13 @@ export default {
     },
     basket() {
       return this.$store.state.shop.basket;
+    },
+    filteredViruses() {
+      return this.viruses.filter(virus => {
+        const matchesName = virus.name.toLowerCase().includes(this.filters.name.toLowerCase());
+        const matchesPrice = this.filters.maxPrice === null || virus.price <= this.filters.maxPrice;
+        return matchesName && matchesPrice;
+      });
     },
   },
   methods: {
@@ -124,18 +151,17 @@ export default {
       });
     },
 
-    setDefaultQuantity(virus) {
-      if (this.selectedViruses.includes(virus)) {
-        this.$set(this.quantities, virus._id, 1);
-      }
-    },
-
     handleVirusSelectionChange(virus) {
       if (!this.selectedViruses.includes(virus)) {
         this.$delete(this.quantities, virus._id); 
       } else {
         this.$set(this.quantities, virus._id, 1);
       }
+    },
+
+    resetFilters() {
+      this.filters.name = '';
+      this.filters.maxPrice = null;
     },
   },
 
@@ -239,5 +265,16 @@ input[type="number"] {
   padding: 5px;
   margin-top: 10px;
   text-align: center;
+}
+
+.filters {
+  margin-bottom: 20px;
+}
+
+.filters input {
+  margin-right: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 </style>
