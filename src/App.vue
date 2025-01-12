@@ -29,7 +29,7 @@ export default {
       if (index === 0) {
         this.$router.push('/shop/login');  
       } else if (index === 1) {
-        this.$router.push('/bank/login');  
+        this.$router.push('/bank/home');  
       }
     }
   }
