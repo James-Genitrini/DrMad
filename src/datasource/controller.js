@@ -145,24 +145,35 @@ function addOrderToUser(userId, order) {
 
 
 
-function payOrder(userId, orderId) {
-  console.log(userId, orderId)
-  const user = shopusers.find(u => u._id === userId);
-  
-  if (user === undefined) {
-    return { error: 1, message: "Utilisateur introuvable." };
+async function payOrder(userId, orderId, transactId) {
+  try {
+    const user = shopusers.find(u => u._id === userId);
+    if (!user) {
+      return { error: 1, message: "Utilisateur introuvable." };
+    }
+
+    const order = user.orders.find(o => o.uuid === orderId);
+    if (!order) {
+      return { error: 1, message: "Commande introuvable." };
+    }
+
+    const transaction = transactions.find(t => t.uuid === transactId);
+    if (!transaction) {
+      return { error: 1, message: "Transaction introuvable." };
+    }
+
+    if (transaction.amount !== -order.total) {
+      return { error: 1, message: "Montant de la transaction invalide." };
+    }
+
+    order.status = 'finalized';
+    return { error: 0, message: "Commande finalisée avec succès.", data: { uuid: orderId } };
+  } catch (error) {
+    console.error("Erreur lors du paiement de la commande :", error);
+    return { error: 1, message: "Une erreur est survenue." };
   }
-
-  const order = user.orders.find(o => o.uuid === orderId);
-  
-  if (order === undefined) {
-    return { error: 1, message: "Commande introuvable." };
-  }
-
-  order.status = 'finalized';
-
-  return { error: 0, message: "Commande finalisée.", data: { uuid: orderId } };
 }
+
 
 
 
@@ -210,7 +221,7 @@ async function getOrderDetails(userId, orderId) {
       return { error: 1, message: 'Commande introuvable' };
     }
 
-    return { error: 0, data: order };  // Retourne les détails de la commande
+    return { error: 0, data: order };  
   } catch (error) {
     console.error("Erreur lors de la récupération des détails de la commande:", error);
     return { error: 1, message: 'Erreur lors de la récupération des détails de la commande' };
@@ -225,7 +236,7 @@ function loginWithAccountNumber(number) {
     const sessionId = generateSessionId();
     return { error: 0, message: 'Login réussi', sessionId: sessionId, account: account };
   } else {
-    return { error: 1, message: 'Numéro de compte non trouvé' };  // Si le compte n'existe pas
+    return { error: 1, message: 'Numéro de compte non trouvé' };  
   }
 }
 

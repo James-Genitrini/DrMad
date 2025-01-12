@@ -119,9 +119,10 @@ async function createOrder(userId, order) {
 
 
 
-async function payOrder(userId, orderId) {
+async function payOrder(userId, orderId, transactId) {
   try {
-    const response = await LocalSource.payOrder(userId, orderId);
+    console.log(userId, orderId, transactId)
+    const response = await LocalSource.payOrder(userId, orderId, transactId);
     return response;
   } catch (error) {
     console.error("Erreur lors du paiement de la commande :", error);

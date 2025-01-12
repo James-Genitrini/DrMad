@@ -43,13 +43,13 @@ import { mapState } from 'vuex';
 export default {
   name: 'ShopPay',
   props: {
-    propsOrderId: String
+    propsOrderId: String,
   },
   data() {
     return {
-      orderId: this.propsOrderId || '',  // Valeur par défaut via props
+      orderId: this.propsOrderId || '', 
       transactId: '',
-      orderDetails: null,  // Pour stocker les détails de la commande
+      orderDetails: null,  
     };
   },
   computed: {
@@ -72,10 +72,10 @@ export default {
           return;
         }
 
-        const response = await ShopService.getOrderDetails(user._id, this.orderId);  // Appel du service pour obtenir les détails
+        const response = await ShopService.getOrderDetails(user._id, this.orderId); 
 
         if (response.error === 0) {
-          this.orderDetails = response.data;  // Stocker les détails dans la variable orderDetails
+          this.orderDetails = response.data;  
         } else {
           alert(response.message);
         }
@@ -85,20 +85,29 @@ export default {
     },
 
     async payOrder() {
+      console.log('payOrder appelé'); 
+
       try {
         if (this.orderId.trim() === '') {
           alert("Veuillez entrer un ID de commande !");
           return;
         }
 
+        if (this.transactId.trim() === '') {
+          alert("Veuillez entrer un ID de transaction !");
+          return;
+        }
+
         const user = this.shopUser;
 
+        console.log(this.orderId)
+        console.log(this.transactId)
+        console.log(user._id)
         if (user === undefined) {
           alert("Vous devez être connecté pour effectuer cette action.");
           return;
         }
-
-        const response = await ShopService.payOrder(user._id, this.orderId);
+        const response = await ShopService.payOrder(user._id, this.orderId, this.transactId);
 
         if (response.error === 0) {
           console.log('Commande payée avec succès !');
