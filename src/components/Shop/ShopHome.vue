@@ -1,5 +1,6 @@
 <template>
   <div class="shop-home">
+    <h2>Bienvenue sur la boutique DRMAD !</h2>
 
     <div v-if="isLoggedIn" class="bottom-section">
       <BasketList />
