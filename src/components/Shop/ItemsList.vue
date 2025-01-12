@@ -71,28 +71,20 @@
       <h1>Votre Panier</h1>
 
       <div class="card-container">
-        <div v-if="basket.length">
-          <div
-            v-for="item in basket"
-            :key="item.item.id"
-            class="basket-item"
-          >
-            <p>{{ item.item.name }} - {{ item.amount }} x {{ item.item.price }} €</p>
-            <button @click="removeFromBasket(item.item._id)">Supprimer</button>
-          </div>
-          <button @click="clearBasket">Vider le panier</button>
-        </div>
-        <div v-else>
-          <p>Le panier est vide.</p>
-        </div>
+        <BasketList />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import BasketList from '@/components/Shop/BasketList.vue';
+
 export default {
   name: 'ItemsList',
+  components: {
+    BasketList,
+  },
   data() {
     return {
       selectedViruses: [],

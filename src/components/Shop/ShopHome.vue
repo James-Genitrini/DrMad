@@ -5,13 +5,11 @@
     <p>Nous avons une vaste sélection de virus à vendre. Explorez notre magasin et faites votre choix !</p>
     <p>Accédez à votre compte ou commencez à acheter dès maintenant ! 
     </p>
-    <!-- Affichage du panier si l'utilisateur est connecté -->
     <div v-if="isLoggedIn">
       <BasketList />
       <ShopOrders />
     </div>
 
-    <!-- Affichage du formulaire de connexion si l'utilisateur n'est pas connecté -->
     <div v-else>
       <ShopLogin />
     </div>
@@ -64,15 +62,15 @@ p {
 }
 
 .shop-home > div {
-  display: inline-block; /* Pour centrer horizontalement */
-  text-align: left; /* Pour garder les éléments à gauche */
-  max-width: 800px; /* Limite la largeur */
-  padding: 20px; /* Espace autour des éléments */
-  background-color: white; /* Fond blanc */
-  border-radius: 8px; /* Coins arrondis */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère autour de l'encadré */
-  margin-top: 30px; /* Espacement entre les sections */
-  width: 100%; /* Prend toute la largeur disponible dans un conteneur parent */
+  display: inline-block; 
+  text-align: left; 
+  max-width: 800px; 
+  padding: 20px; 
+  background-color: white; 
+  border-radius: 8px; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  width: 100%; 
 }
 
 /* Optionnel : Si tu veux ajuster les marges internes des composants BasketList et ShopOrders */
