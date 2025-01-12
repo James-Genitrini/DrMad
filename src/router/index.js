@@ -96,6 +96,14 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   routes,
+})
+
+// Censé" éviter la redirection vers la même page mais marche pas :/ 
+router.beforeEach((to, from, next) => {
+  if (to.path == from.path) {
+    return next(false);
+  }
+  next();
 });
 
 export default router;

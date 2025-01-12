@@ -1,11 +1,18 @@
 <template>
     <div class="bank-account-wrapper">
-        <h1>Compte</h1>
-        <span>Numero de compte : </span><input v-model="number"> <br>
-        <button @click="login(number)">Valider</button>
+        <h1>Se connecter</h1>
+        <span>Numero de compte : </span>
+        <br>
+        <br>
+        <p v-if="numberError && !(accountNumberError == -1)">
+            Veuillez entrer un numéro de compte.
+        </p>
         <p v-if="accountNumberError == -1">
             Numero de compte invalide
         </p>
+        <input v-model="number" placeholder="Format FRXXXXXXxxxxxxxxxxxxxx-xxxxxxx "> <br>
+        <button @click="login(number)">Valider</button> <br>
+        <button @click="goBackHome" class="back">Retour</button>
     </div>
 </template>
 
@@ -17,6 +24,7 @@ export default {
     name: 'BankAccountView',
     data: () => ({
         number: '',
+        numberError: false,
     }),
     computed: {
         ...mapState('bank', ['currentAccount', 'accountNumberError']),
@@ -24,15 +32,35 @@ export default {
     methods: {
         ...mapActions('bank', ['getAccount']),
         async login(number) {
+            if (!number) {
+                this.numberError = true;
+                return;
+            }
+            
+            this.numberError = false;
+
             await this.getAccount(number)
             if (this.currentAccount)
                 router.push('/bank/amount')
+        },
+
+        goBackHome() {
+            this.numberError = false;
+            router.push('/bank/home')
         }
     }
 }
 </script>
 
 <style scoped>
+.back {
+    background-color: #f44336;
+}
+
+.back:hover {
+    background-color: #d32f2f;
+}
+
 div {
     padding: 20px;
     max-width: 600px;
@@ -55,7 +83,7 @@ input {
 
 button {
     padding: 10px 15px;
-    margin: 10px 0;
+    margin: 10px auto;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -70,6 +98,6 @@ button:hover {
 
 p {
     color: red;
-    font-weight: bold;
+    font-size: 16px;
 }
 </style>

@@ -33,14 +33,6 @@ export default {
       }
     }
   },
-  // eviter Avoided redundant navigation to current location -> update marche pas
-  watch: {
-    $route(to, from) {
-      if (to.path === from.path) {
-        this.$router.go();
-      }
-    }
-  }
 
 };
 </script>

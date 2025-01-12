@@ -29,7 +29,7 @@
                 Détails
             </template>
             <template #table-button>
-                Voir transactions
+                Voir UUIDs
             </template>
         </DataTable>
     </div>
@@ -91,9 +91,9 @@ export default {
         },
         showSelectedTransactions(selectedItems) {
             if (!selectedItems.length) {
-                return alert('No transaction selected');
+                return alert('Aucune transaction sélectionnée');
             }
-            alert(`Selected Transactions UUIDs: ${selectedItems.map(item => item.uuid).join(', ')}`);
+            alert(`UUIDs des transactions sélectionnées : ${selectedItems.map(item => item.uuid).join(', ')}`);
         },
     },
     mounted() {
@@ -101,48 +101,49 @@ export default {
     },
 };
 </script>
+
 <style scoped>
 .history-wrapper {
-    padding: 24px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #2e2e2e;
+    border: 1px solid #e0e7ff;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     max-width: 1200px;
-    margin: 20px auto;
-    transition: ease-in-out 0.1s;
+    margin: 30px auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .history-wrapper:hover {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    transition: ease-in-out 0.1s;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .history-wrapper h1 {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 26px;
+    font-weight: 600;
     margin-bottom: 16px;
-    color: #333;
+    color: #5b616d;
 }
 
 label {
-    font-size: 14px;
+    font-size: 15px;
     color: #555;
     margin-right: 8px;
 }
 
 input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     margin-left: 8px;
     cursor: pointer;
     accent-color: #4CAF50;
 }
 
 input[type="date"] {
-    padding: 6px 12px;
+    padding: 8px 14px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 14px;
     color: #333;
     margin-right: 8px;
@@ -159,23 +160,23 @@ input[type="date"]:focus {
     margin: 16px 0;
     padding: 16px;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #e0e7ff;
     border-radius: 8px;
 }
 
 button {
-    padding: 8px 16px;
+    padding: 10px 20px;
     background-color: #4CAF50;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #5ecf61;
+    background-color: #3e8e41;
 }
 
 button:focus {
@@ -190,6 +191,10 @@ button:disabled {
 
 button:disabled:hover {
     background-color: #ccc!important;
+}
+
+button:disabled:focus {
+    outline: none;
 }
 
 p {

@@ -1,11 +1,11 @@
 import LocalSource from '@/datasource/controller';
 
-function getAccountAmount(number) {
+async function handleLocalSourceRequest(callback, errorMessage) {
   let response = null;
   try {
-    response = getAccountAmountFromLocalSource(number);
+    response = await callback();
   } catch (err) {
-    response = { error: 1, status: 404, data: 'erreur réseau, impossible de récupérer les comptes' };
+    response = { error: 1, status: 404, data: errorMessage };
   }
   return response;
 }
@@ -14,45 +14,9 @@ function getAccountFromLocalSource(number) {
   return LocalSource.getAccount(number);
 }
 
-function getAccount(number) {
-  let response = null;
-  try {
-    response = getAccountFromLocalSource(number);
-  } catch (err) {
-    response = { error: 1, status: 404, data: 'erreur réseau, impossible de récupérer les comptes' };
-  }
-  return response;
-}
-
 function getAccountAmountFromLocalSource(number) {
   return LocalSource.getAccountAmount(number);
 }
-
-function getAccountTransactions(number) {
-  let response = null;
-  try {
-    response = getAccountTransactionsFromLocalSource(number);
-  } catch (err) {
-    response = { error: 1, status: 404, data: 'erreur réseau, impossible de récupérer les transactions' };
-  }
-  return response;
-}
-
-async function getAccountTransactionsByNumberFromLocalSouce(data) {
-  return LocalSource.getAccountTransactionsByNumber(data)
-}
-
-async function getAccountTransactionsByNumber(data) {
-  let response = null;
-  try {
-    response = await getAccountTransactionsByNumberFromLocalSouce(data)
-  }
-  catch(err) {
-    response = {error: 1, status: 404, data: 'erreur reseau, impossible de recuperer le detail du compte'  }
-  }
-  return response
-}
-
 
 function getAccountTransactionsFromLocalSource(number) {
   return LocalSource.getAccountTransactions(number);
@@ -62,27 +26,38 @@ async function validateOperationFromLocalSource(data) {
   return LocalSource.operationValidation(data);
 }
 
+async function getAccountTransactionsByNumberFromLocalSouce(data) {
+  return LocalSource.getAccountTransactionsByNumber(data);
+}
+
+async function getAccountAmount(number) {
+  return handleLocalSourceRequest(() => getAccountAmountFromLocalSource(number), 'Erreur réseau, impossible de récupérer les comptes');
+}
+
+async function getAccount(number) {
+  return handleLocalSourceRequest(() => getAccountFromLocalSource(number), 'Erreur réseau, impossible de récupérer les comptes');
+}
+
+async function getAccountTransactions(number) {
+  return handleLocalSourceRequest(() => getAccountTransactionsFromLocalSource(number), 'Erreur réseau, impossible de récupérer les transactions');
+}
+
+async function getAccountTransactionsByNumber(data) {
+  return handleLocalSourceRequest(() => getAccountTransactionsByNumberFromLocalSouce(data), 'Erreur réseau, impossible de récupérer le détail du compte');
+}
+
 async function operationValidation(data) {
-  let response = null;
-  try {
-    response = await validateOperationFromLocalSource(data)
-  }
-  catch(err) {
-    response = {error: 1, status: 404, data: 'erreur reseau, impossible de recuperer le detail du compte'  }
-  }
-  return response
+  return handleLocalSourceRequest(() => validateOperationFromLocalSource(data), 'Erreur réseau, impossible de valider l\'opération');
 }
 
 async function login(accountNumber) {
   try {
     const response = await LocalSource.loginWithAccountNumber(accountNumber);
-
     if (response.error === 0) {
       localStorage.setItem('sessionId', response.sessionId);
       return { success: true, message: response.message, account: response.account };
-    } else {
-      return { success: false, message: response.message };
     }
+    return { success: false, message: response.message };
   } catch (error) {
     return { success: false, message: 'Erreur lors de la connexion' };
   }

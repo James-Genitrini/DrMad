@@ -57,13 +57,14 @@ export default {
 <style scoped>
 .operation-wrapper {
     padding: 32px;
-    background-color: #ffffff;
+    background-color: #2e2e2e;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     margin: 20px auto;
     transition: ease-in-out 0.2s;
+    color: #4a5568;
 }
 
 .operation-wrapper:hover {
@@ -74,7 +75,7 @@ export default {
 h1 {
     font-size: 28px;
     font-weight: 600;
-    color: #333;
+    color: #4a5568;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -97,7 +98,7 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 16px;
-    color: #333;
+    color: #4a5568;
     margin-top: 5px;
     transition: border-color 0.3s;
 }
@@ -107,6 +108,7 @@ input[type="text"]:focus {
     border-color: #4CAF50;
     outline: none;
 }
+
 input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -118,7 +120,7 @@ input[type="checkbox"] {
 button {
     width: 100%;
     padding: 12px;
-    background-color: #429945;
+    background-color: #4CAF50;
     color: white;
     font-size: 18px;
     border: none;
@@ -129,7 +131,7 @@ button {
 }
 
 button:hover {
-    background-color: #4CAF50;
+    background-color: #45a049;
 }
 
 button:focus {
@@ -143,5 +145,6 @@ button:focus {
     font-weight: 600;
     text-align: center;
     margin-top: 20px;
+    transition: color 0.3s ease;
 }
 </style>

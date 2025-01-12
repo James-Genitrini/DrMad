@@ -3,7 +3,7 @@
         <ul class="menu-list">
             <li v-for="(item, index) in items" :key="index" class="menu-item">
                 <template v-if="item.type === 'title'">
-                    <slot name="menu-title" :label="item.label">
+                    <slot name="menu-title" :label="item.label" class="menu-title">
                         <div class="menu-title">{{ item.label }}</div>
                     </slot>
                 </template>
@@ -40,10 +40,17 @@ export default {
 
 <style scoped>
 .vertical-menu {
-    padding: 10px;
-    border-radius: 8px;
-    margin: 5px auto;
-    transition: ease-in-out 0.1s;
+    padding: 20px;
+    background-color: transparent;
+    border-radius: 10px;
+    border: none!important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: ease-in-out 0.2s;
+}
+
+.vertical-menu:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transition: ease-in-out 0.3s;
 }
 
 .menu-list {
@@ -53,36 +60,68 @@ export default {
 }
 
 .menu-item {
-    margin: 10px 0;
+    margin: 15px 0;
 }
 
 .menu-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
 
 .menu-link {
     cursor: pointer;
     display: inline-block;
+    width: 100%;
 }
 
 .menu-button {
-    background-color: #00ff00;
-    border: 2px solid transparent;
-    padding: 10px 15px;
-    font-size: 16px;
+    background-color: #4CAF50;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: white;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
+    width: 100%;
+    border-radius: 6px;
+    transition: background-color 0.3s, transform 0.2s, color 0.2s;
+    font-weight: 500;
 }
 
 .menu-button:enabled:hover {
-    background-color: #00cc00;
-    border-color: #00cc00;
+    background-color: #3e8e41;
+}
+
+.menu-button:enabled:focus {
+    outline: 2px solid #60e464;
+    outline-offset: 2px;
 }
 
 .menu-button:disabled {
+    background-color: #ddd;
     cursor: not-allowed;
+    opacity: 0.6;
+    transform: none!important;
+}
+
+.menu-button:disabled:hover {
+    background-color: #ddd;
+    transform: none!important;
+}
+
+@media (max-width: 768px) {
+    .vertical-menu {
+        padding: 15px;
+    }
+
+    .menu-title {
+        font-size: 1.1rem;
+    }
+
+    .menu-button {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+    }
 }
 </style>
