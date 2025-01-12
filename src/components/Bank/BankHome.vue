@@ -29,7 +29,7 @@
   
         <div class="content">
             <h3 :hidden="balance" :style="{ color: balanceColor }">Bienvenue {{ accountNumber }}</h3>
-            <h3 :hidden="!balance" :style="{ color: balanceColor }">Solde actuel : {{ balance || "vide" }} €</h3>
+            <h3 :hidden="!balance" :style="{ color: balanceColor }">Solde actuel : {{ balance }} €</h3>
         </div>
       </div>
     </div>
