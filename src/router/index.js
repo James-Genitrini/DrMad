@@ -10,8 +10,6 @@ import ShopOrders from '../components/Shop/ShopOrders.vue';
 import ShopPay from '../components/Shop/ShopPay.vue';
 
 import BankHome from '../components/Bank/BankHome.vue';
-import BankAccount from '../components/Bank/BankAccount.vue';
-import BankTransfer from '../components/Bank/BankTransfer.vue';
 Vue.use(VueRouter);
 
 const routes = [
@@ -47,17 +45,6 @@ const routes = [
   {
     path: '/bank/home',
     component: BankHome,
-  },
-  {
-    path: '/bank/account',
-    name: 'bankAccount',
-    component: BankAccount,
-  },
-  {
-    path: '/bank/transfer',
-    name: 'bankTransfer',
-    component: BankTransfer,
-    meta: { requiresAuth: true },
   },
 ];
 
