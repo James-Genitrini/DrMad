@@ -1,44 +1,38 @@
 <template>
   <div id="app">
-    <NavBar :titles="titles" @menu-clicked="menuClicked" />
+    <NavBarHome :titles="titles" @menu-clicked="menuClicked" />
 
-    <img alt="Vue logo" src="./assets/peepo.gif">
+    <!-- <img alt="Vue logo" src="./assets/peepo.gif"> -->
     <h1>Welcome to Peepo's app</h1>
 
     <router-view></router-view>
   </div>
-
-
 </template>
 
 <script>
-import NavBar from "@/components/NavBar.vue";
-import { mapActions } from 'vuex'
+import NavBarHome from "@/components/NavBarHome.vue";  
 
 export default {
   name: 'App',
-
   components: {
-    NavBar
+    NavBarHome
   },
-  data: () => ({
-    titles: [
-      { text: 'Viruses', color: 'red' },
-      { text: 'Compte Bancaire', color: 'blue' },
-      { text: 'Login', color: 'green' }
-    ]
-  }),
+  data() {
+    return {
+      titles: [
+        { text: 'Boutique', color: 'green' },
+        { text: 'Bank', color: 'blue' },
+      ]
+    };
+  },
   methods: {
-    ...mapActions(['getAllViruses']),
     menuClicked(index) {
-      console.log(index + ' clicked')
-      if (index === 0) { this.$router.push('/shop/buy'); }
-      else if (index === 1) { this.$router.push('/bank/account'); }
-      else if (index === 2) { this.$router.push(('/shop/login')); }
+      if (index === 0) {
+        this.$router.push('/shop/login');  
+      } else if (index === 1) {
+        this.$router.push('/bank/login');  
+      }
     }
-  },
-  mounted() {
-    this.getAllViruses()
   }
 };
 </script>
@@ -59,7 +53,6 @@ h1 {
   text-align: center;
 }
 
-
 hr {
   color: #303030;
   border: 1px solid #303030;
@@ -76,7 +69,6 @@ hr {
 ::-webkit-scrollbar-thumb {
   background-color: #888;
   border-radius: 10px;
-  /* border: 1px solid #f1f1f1; */
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -87,5 +79,4 @@ hr {
 input {
   background-color: red;
 }
-
 </style>

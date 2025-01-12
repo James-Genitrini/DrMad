@@ -1,48 +1,64 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 
-import ShopHome from '../components/Shop/ShopHome.vue'
-import ShopLogin from '../components/Shop/ShopLogin.vue'
-import ShopBuy from '../components/Shop/ShopBuy.vue'
-import ShopPay from '../components/Shop/ShopPay.vue'
-import ShopOrders from '../components/Shop/ShopOrders.vue'
+// Importation des composants
+import WrapperComponent from '@/components/WrapperComponent.vue';  
+import ShopHome from '../components/Shop/ShopHome.vue';
+import ShopLogin from '../components/Shop/ShopLogin.vue';
+import ShopBuy from '../components/Shop/ShopBuy.vue';
+import ShopOrders from '../components/Shop/ShopOrders.vue';
 
-Vue.use(VueRouter)
+import BankHome from '../components/Bank/BankHome.vue';
+import BankAccount from '../components/Bank/BankAccount.vue';
+import BankTransfer from '../components/Bank/BankTransfer.vue';
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/shop',
-    component: ShopHome,
-    alias: '/shop/home',
+    component: WrapperComponent,  
+    children: [
+      {
+        path: 'home',
+        component: ShopHome,
+        alias: '/', 
+      },
+      {
+        path: 'buy',
+        component: ShopBuy,
+      },
+      {
+        path: 'orders',
+        component: ShopOrders,
+        meta: { requiresAuth: true },  
+      },
+      {
+        path: 'login',
+        component: ShopLogin,
+      }
+    ],
+  },
+
+  {
+    path: '/bank/home',
+    component: BankHome,
   },
   {
-    path: '/shop/login',
-    name: 'shoplogin',
-    component: ShopLogin
+    path: '/bank/account',
+    name: 'bankAccount',
+    component: BankAccount,
   },
   {
-    path: '/shop/buy',
-    name: 'shopbuy',
-    component: ShopBuy
+    path: '/bank/transfer',
+    name: 'bankTransfer',
+    component: BankTransfer,
+    meta: { requiresAuth: true },
   },
-  {
-    path: '/shop/pay/:orderId',
-    name: 'shopPay',
-    component: ShopPay,
-    props: true
-  },
-  {
-    path: '/shop/orders',
-    name: 'shopOrders',
-    component: ShopOrders,
-    meta: { requiresAuth: true }
-  }
-]
+];
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

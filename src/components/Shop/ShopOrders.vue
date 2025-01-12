@@ -22,6 +22,7 @@ import ShopService from '@/services/shop.service';
 
 export default {
   name: 'ShopOrders',
+
   data() {
     return {
       orders: [],
@@ -100,4 +101,17 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.shop-home > div, .shop-buy > div, .shop-orders > div {
+  margin-top: 30px;
+  display: inline-block; /* Pour centrer horizontalement */
+  text-align: left; /* Pour garder les éléments à gauche */
+  max-width: 800px; /* Limite la largeur */
+  padding: 20px; /* Espace autour des éléments */
+  background-color: white; /* Fond blanc */
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère autour de l'encadré */
+  width: 100%; 
+}
+
 </style>

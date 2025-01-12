@@ -1,11 +1,10 @@
 <template>
   <div class="shop-home">
-    <Navbar />
-    <h1>Bienvenue dans la boutique DrMad !</h1>
-    <p>Nous avons une vaste sélection de virus à vendre. Explorez notre magasin et faites votre choix !</p>
-    <p>Accédez à votre compte ou commencez à acheter dès maintenant ! 
-    </p>
-    <div v-if="isLoggedIn">
+    <div class="content">
+      <router-view />
+    </div>
+
+    <div v-if="isLoggedIn" class="bottom-section">
       <BasketList />
       <ShopOrders />
     </div>
@@ -17,7 +16,6 @@
 </template>
 
 <script>
-// import Navbar from '@/components/NavBar.vue'
 import BasketList from '@/components/Shop/BasketList.vue'
 import ShopLogin from '@/components/Shop/ShopLogin.vue'
 import ShopOrders from '@/components/Shop/ShopOrders.vue'
@@ -25,18 +23,17 @@ import ShopOrders from '@/components/Shop/ShopOrders.vue'
 export default {
   name: 'ShopHome',
   components: {
-    // Navbar,
     BasketList,
     ShopLogin,
     ShopOrders
   },
   data() {
     return {
-      isLoggedIn: false, 
+      isLoggedIn: false,  
     };
   },
   mounted() {
-    this.isLoggedIn = !!localStorage.getItem('user');  
+    this.isLoggedIn = !!localStorage.getItem('user');
   }
 }
 </script>
@@ -45,6 +42,24 @@ export default {
 .shop-home {
   text-align: center;
   margin-top: 50px;
+}
+
+.content {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #484848;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 50%; /* Prend 50% de la largeur */
+  margin-left: auto;
+  margin-right: auto; /* Centré horizontalement */
+}
+
+.bottom-section {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #484848;
+  border-top: 2px solid #484848;
 }
 
 h1 {
@@ -62,20 +77,18 @@ p {
 }
 
 .shop-home > div {
-  display: inline-block; 
-  text-align: left; 
-  max-width: 800px; 
-  padding: 20px; 
-  background-color: white; 
-  border-radius: 8px; 
+  display: inline-block;
+  text-align: left;
+  max-width: 800px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
-  width: 100%; 
+  width: 100%;
 }
 
-/* Optionnel : Si tu veux ajuster les marges internes des composants BasketList et ShopOrders */
 .shop-home > div > * {
   margin-bottom: 20px;
 }
-
 </style>
