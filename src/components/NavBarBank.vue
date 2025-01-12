@@ -6,9 +6,7 @@
         <router-link to="/bank/buy" v-if="isAuthenticated">Boutique</router-link>
   
         <router-link to="/bank/orders" v-if="isAuthenticated">Mes Commandes</router-link>
-  
-        <router-link to="/shop/login">Shop</router-link>
-  
+    
         <router-link to="/shop/home" v-if="!isAuthenticated">Se connecter</router-link>
   
         <button v-if="isAuthenticated" @click="logout">Se déconnecter</button>
