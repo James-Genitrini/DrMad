@@ -7,6 +7,8 @@
           <span v-if="isLoggedIn">{{ userName }}</span>
         </div>
       </nav>
+       
+      <h1>Bienvenue sur la banque</h1>
   
       <div v-if="showLoginForm" class="login-form">
         <input
@@ -16,6 +18,7 @@
         />
         <button @click="login">Se connecter</button>
       </div>
+
   
       <div v-if="isLoggedIn" class="main-content">
         <div class="sidebar">
@@ -25,7 +28,8 @@
         </div>
   
         <div class="content">
-            <h3 :style="{ color: balanceColor }">Solde actuel : {{ balance }} €</h3>
+            <h3 :hidden="balance" :style="{ color: balanceColor }">Bienvenue {{ accountNumber }}</h3>
+            <h3 :hidden="!balance" :style="{ color: balanceColor }">Solde actuel : {{ balance || "vide" }} €</h3>
         </div>
       </div>
     </div>
