@@ -198,6 +198,24 @@ function cancelOrder(userId, orderId) {
 }
 
 
+async function getOrderDetails(userId, orderId) {
+  try {
+    const user = shopusers.find(u => u._id === userId);
+    if (!user) {
+      return { error: 1, message: 'Utilisateur introuvable' };
+    }
+
+    const order = user.orders.find(o => o.uuid === orderId);
+    if (!order) {
+      return { error: 1, message: 'Commande introuvable' };
+    }
+
+    return { error: 0, data: order };  // Retourne les détails de la commande
+  } catch (error) {
+    console.error("Erreur lors de la récupération des détails de la commande:", error);
+    return { error: 1, message: 'Erreur lors de la récupération des détails de la commande' };
+  }
+}
 
 export default {
   shopLogin,
@@ -212,4 +230,5 @@ export default {
   payOrder,
   getOrders,
   cancelOrder,
+  getOrderDetails,
 }

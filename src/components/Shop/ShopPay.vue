@@ -7,8 +7,31 @@
         type="text"
         id="order-id"
         :placeholder="propsOrderId ? propsOrderId : 'Entrez l\'ID de la commande'"
-      />
+      /> <br>
+
+      <label for="transact-id">ID de la transaction :</label>
+      <input
+        v-model="transactId"
+        type="text"
+        id="transact-id"
+        :placeholder="'Entrez l\'ID de la transaction'"
+      /> <br>
+
+      <button @click="fetchOrderDetails">Voir les détails de la commande</button>
     </div>
+
+    <div v-if="orderDetails">
+      <h3>Détails de la commande</h3>
+      <ul>
+        <li v-for="(item, index) in orderDetails.items" :key="index">
+          <p><strong>Produit:</strong> {{ item.item.name }}</p>
+          <p><strong>Prix:</strong> {{ item.item.price }}€</p>
+          <p><strong>Quantité:</strong> {{ item.amount }}</p>
+        </li>
+      </ul>
+      <p><strong>Total:</strong> {{ orderDetails.total }}€</p>
+    </div>
+
     <button @click="payOrder">Payer</button>
   </div>
 </template>
@@ -25,6 +48,8 @@ export default {
   data() {
     return {
       orderId: this.propsOrderId || '',  // Valeur par défaut via props
+      transactId: '',
+      orderDetails: null,  // Pour stocker les détails de la commande
     };
   },
   computed: {
@@ -33,6 +58,32 @@ export default {
     }),
   },
   methods: {
+    async fetchOrderDetails() {
+      try {
+        if (this.orderId.trim() === '') {
+          alert("Veuillez entrer un ID de commande !");
+          return;
+        }
+
+        const user = this.shopUser;
+
+        if (!user) {
+          alert("Vous devez être connecté pour voir les détails de la commande.");
+          return;
+        }
+
+        const response = await ShopService.getOrderDetails(user._id, this.orderId);  // Appel du service pour obtenir les détails
+
+        if (response.error === 0) {
+          this.orderDetails = response.data;  // Stocker les détails dans la variable orderDetails
+        } else {
+          alert(response.message);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des détails de la commande:", error);
+      }
+    },
+
     async payOrder() {
       try {
         if (this.orderId.trim() === '') {
@@ -48,7 +99,7 @@ export default {
         }
 
         const response = await ShopService.payOrder(user._id, this.orderId);
-        
+
         if (response.error === 0) {
           console.log('Commande payée avec succès !');
           this.$router.push('/shop/orders'); 
@@ -64,7 +115,7 @@ export default {
     if (this.$route.params.orderId) {
       this.orderId = this.$route.params.orderId;
     }
-  },
+  }
 }
 </script>
 
@@ -85,9 +136,19 @@ button {
   color: white;
   border: none;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 button:hover {
   background-color: darkgreen;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul li {
+  margin-bottom: 10px;
 }
 </style>

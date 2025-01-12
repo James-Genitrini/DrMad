@@ -154,6 +154,15 @@ async function cancelOrder(userId, orderId) {
 }
 
 
+async function getOrderDetails(userId, orderId){
+  try {
+    const response = await LocalSource.getOrderDetails(userId, orderId);
+    return response;
+  } catch (error) {
+    console.error("Erreur récupération des détails");
+    return { error: 1}
+  }
+}
 
 export default {
   shopLogin,
@@ -165,5 +174,6 @@ export default {
   createOrder,
   payOrder,
   getOrders,
-  cancelOrder
+  cancelOrder,
+  getOrderDetails
 }
