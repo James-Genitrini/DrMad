@@ -217,6 +217,38 @@ async function getOrderDetails(userId, orderId) {
   }
 }
 
+
+function loginWithAccountNumber(number) {
+  const account = bankaccounts.find(acc => acc.number === number);
+
+  if (account) {
+    const sessionId = generateSessionId();
+    return { error: 0, message: 'Login réussi', sessionId: sessionId, account: account };
+  } else {
+    return { error: 1, message: 'Numéro de compte non trouvé' };  // Si le compte n'existe pas
+  }
+}
+
+function generateSessionId() {
+  return 'session-' + Math.random().toString(36).substring(2, 15);
+}
+
+function getSession(sessionId) {
+  if (sessionId) {
+    return { error: 0, message: 'Session valide', sessionId: sessionId };
+  } else {
+    return { error: 1, message: 'Aucune session active' };
+  }
+}
+
+function logout(sessionId) {
+  if (sessionId) {
+    return { error: 0, message: 'Déconnexion réussie' };
+  } else {
+    return { error: 1, message: 'Aucune session active pour se déconnecter' };
+  }
+}
+
 export default {
   shopLogin,
   getAllViruses,
@@ -231,4 +263,7 @@ export default {
   getOrders,
   cancelOrder,
   getOrderDetails,
+  loginWithAccountNumber,
+  getSession,
+  logout,
 }
