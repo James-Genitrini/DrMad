@@ -10,6 +10,20 @@ function getAccountAmount(number) {
   return response;
 }
 
+function getAccountFromLocalSource(number) {
+  return LocalSource.getAccount(number);
+}
+
+function getAccount(number) {
+  let response = null;
+  try {
+    response = getAccountFromLocalSource(number);
+  } catch (err) {
+    response = { error: 1, status: 404, data: 'erreur réseau, impossible de récupérer les comptes' };
+  }
+  return response;
+}
+
 function getAccountAmountFromLocalSource(number) {
   return LocalSource.getAccountAmount(number);
 }
@@ -62,6 +76,7 @@ function logout() {
 export default {
   getAccountAmount,
   getAccountTransactions,
+  getAccount,
   login,
   logout,
 }

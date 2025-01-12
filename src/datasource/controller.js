@@ -38,7 +38,39 @@ function getAllViruses() {
   return { error: 0, data: items }
 }
 
+function getAccount(data) {
+  let number = data.number
+  if (number == null || number == "")
+    return
+  let id = getAccountId(number)
+  if (id.error === 1) {
+    return { error: 1, status: 404, data: 'Error in recovering account id' }
+  }
+  return getAccountById({ account_id: id.data })
+}
 
+function getAccountById(data) {
+  let account_id = data.account_id
+  if (account_id == null || account_id == "")
+    return
+  for (let i = 0; i < bankaccounts.length; i++) {
+    if (bankaccounts[i]["_id"] === account_id) {
+      return { error: 0, status: 200, data: bankaccounts[i] }
+    }
+  }
+  return { error: 1, status: 404, data: 'No matching accounts found' }
+}
+
+function getAccountId(number) {
+  if (number == "")
+    return
+  for (let i = 0; i < bankaccounts.length; i++) {
+    if (bankaccounts[i]["number"] === number) {
+      return { error: 0, status: 200, data: bankaccounts[i]["_id"] }
+    }
+  }
+  return { error: 1, status: 404, data: 'nw' }
+}
 
 function getAccountAmount(number) {
   if (!number) {
@@ -69,6 +101,18 @@ function getAccountTransactions(number) {
   return { error: 0, status: 200, data: listOfTransaction.map(e => { 
     return { amount: e.amount, date: e.date, uuid: e.uuid } 
   })}
+}
+
+function getAccountTransactionsByNumber(data) {
+  let number = data.number
+  if (number == null, number == "") {
+    return
+  }
+  let account_id = getAccountId(number)
+  if (account_id.error === 1) {
+    return { error: 1, status: 404, data: 'Error in recovering account id' }
+  }
+  return getAccountTransactions({ account_id: account_id.data })
 }
 
 
@@ -265,6 +309,10 @@ export default {
   getAllViruses,
   getAccountAmount,
   getAccountTransactions,
+  getAccountTransactionsByNumber,
+  getAccount,
+  getAccountById,
+  getAccountId,
   getUserBasket,
   updateUserBasket,
   removeItemFromUserBasket,
