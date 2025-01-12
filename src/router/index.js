@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 // Importation des composants
-import WrapperComponent from '@/components/WrapperComponent.vue';  
+import ShopView from '@/views/ShopView.vue';
 import ShopHome from '../components/Shop/ShopHome.vue';
 import ShopLogin from '../components/Shop/ShopLogin.vue';
 import ShopBuy from '../components/Shop/ShopBuy.vue';
@@ -15,7 +15,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/shop',
-    component: WrapperComponent,  
+    component: ShopView,  
     children: [
       {
         path: 'home',
