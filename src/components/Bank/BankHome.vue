@@ -25,11 +25,7 @@
         </div>
   
         <div class="content">
-          <h2 v-if="currentAction">Action en cours : {{ currentAction }}</h2>
-  
-          <div v-if="currentAction === 'Vérification du solde'">
             <h3 :style="{ color: balanceColor }">Solde actuel : {{ balance }} €</h3>
-          </div>
         </div>
       </div>
     </div>
@@ -91,7 +87,6 @@
       },
   
       checkBalance() {
-        this.currentAction = "Vérification du solde";
         this.getBalance();
       },
   
