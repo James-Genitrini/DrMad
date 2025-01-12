@@ -7,6 +7,7 @@ import ShopHome from '../components/Shop/ShopHome.vue';
 import ShopLogin from '../components/Shop/ShopLogin.vue';
 import ShopBuy from '../components/Shop/ShopBuy.vue';
 import ShopOrders from '../components/Shop/ShopOrders.vue';
+import ShopPay from '../components/Shop/ShopPay.vue';
 
 import BankHome from '../components/Bank/BankHome.vue';
 import BankAccount from '../components/Bank/BankAccount.vue';
@@ -35,6 +36,10 @@ const routes = [
       {
         path: 'login',
         component: ShopLogin,
+      },
+      {
+        path: 'pay/:orderId',
+        component: ShopPay,
       }
     ],
   },

@@ -1,8 +1,5 @@
 <template>
   <div class="shop-home">
-    <div class="content">
-      <router-view />
-    </div>
 
     <div v-if="isLoggedIn" class="bottom-section">
       <BasketList />

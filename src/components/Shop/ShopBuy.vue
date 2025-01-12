@@ -1,6 +1,5 @@
 <template>
   <div class="shop-buy">
-    <!-- Section Liste des Virus -->
     <div class="shop-buy-left">
       <h1>Liste des Virus</h1>
       <ItemsList
