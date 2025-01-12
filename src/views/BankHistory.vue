@@ -3,10 +3,8 @@
         <h1>
             <slot name="title">Opérations passées</slot>
         </h1>
-        <div v-if="!filteredTransactions.length === 0">
-            <label for="periodFilter">Filtrer par période : </label>
-            <input type="checkbox" v-model="periodFilter" id="periodFilter">
-        </div>
+        <label for="periodFilter">Filtrer par période : </label>
+        <input type="checkbox" v-model="periodFilter" id="periodFilter">
         <div v-if="periodFilter">
             <label for="start">Du :</label>
             <input type="date" id="start" v-model="start" />
@@ -31,7 +29,7 @@
                 Détails
             </template>
             <template #table-button>
-                Voir
+                Voir transactions
             </template>
         </DataTable>
     </div>
@@ -138,7 +136,7 @@ input[type="checkbox"] {
     height: 16px;
     margin-left: 8px;
     cursor: pointer;
-    accent-color: #007bff;
+    accent-color: #4CAF50;
 }
 
 input[type="date"] {
@@ -153,7 +151,7 @@ input[type="date"] {
 }
 
 input[type="date"]:focus {
-    border-color: #007bff;
+    border-color: #4CAF50;
     outline: none;
 }
 
@@ -167,7 +165,7 @@ input[type="date"]:focus {
 
 button {
     padding: 8px 16px;
-    background-color: #007bff;
+    background-color: #4CAF50;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -177,11 +175,11 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #5ecf61;
 }
 
 button:focus {
-    outline: 2px solid #80bdff;
+    outline: 2px solid #60e464;
     outline-offset: 2px;
 }
 
@@ -189,4 +187,15 @@ button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+button:disabled:hover {
+    background-color: #ccc!important;
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+    margin-top: 16px;
+}
+
 </style>

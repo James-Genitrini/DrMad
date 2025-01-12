@@ -58,6 +58,21 @@ function getAccountTransactionsFromLocalSource(number) {
   return LocalSource.getAccountTransactions(number);
 }
 
+async function validateOperationFromLocalSource(data) {
+  return LocalSource.operationValidation(data);
+}
+
+async function operationValidation(data) {
+  let response = null;
+  try {
+    response = await validateOperationFromLocalSource(data)
+  }
+  catch(err) {
+    response = {error: 1, status: 404, data: 'erreur reseau, impossible de recuperer le detail du compte'  }
+  }
+  return response
+}
+
 async function login(accountNumber) {
   try {
     const response = await LocalSource.loginWithAccountNumber(accountNumber);
@@ -89,6 +104,7 @@ function logout() {
 }
 
 export default {
+  operationValidation,
   getAccountAmount,
   getAccountTransactions,
   getAccountTransactionsByNumber,

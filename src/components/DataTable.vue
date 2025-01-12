@@ -30,7 +30,6 @@
         </table>
         <button v-if="tableButton" @click="emitTableClicked" class="table-button">
             <slot name="table-button">
-                Eventuel bouton
             </slot>
         </button>
     </div>
@@ -96,7 +95,6 @@ export default {
 table {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'Arial', sans-serif;
     font-size: 14px;
 }
 
@@ -131,7 +129,7 @@ button {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
-    background-color: #007bff;
+    background-color: #4CAF50!important;
     color: #fff;
     font-size: 14px;
     cursor: pointer;
@@ -139,11 +137,11 @@ button {
 }
 
 button:hover {
-    background-color: red;
+    background-color: #58ca5c!important;
 }
 
 button:focus {
-    outline: 2px solid #80bdff;
+    outline: 2px solid #007bff;
     outline-offset: 2px;
 }
 

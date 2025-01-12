@@ -112,6 +112,62 @@ function getAccountTransactionsByNumber(data) {
   return getAccountTransactions({ account_id: account_id.data })
 }
 
+function operationValidation(data) {
+  let currentAccount = data.currentAccount
+  let amount = data.amount
+  let isRecipient = data.isRecipient
+
+  if (!amount) {
+    alert("Erreur : Le montant doit être renseigné.");
+    return { error: 1, status: 404, data: 'Le montant doit être renseigné.' };
+  }
+
+  if (amount <= 0) {
+    alert("Erreur : Le montant doit être supérieur à 0.");
+    return { error: 1, status: 404, data: 'Le montant doit être supérieur à 0.' };
+  }
+
+  let transaction = {
+    '_id': currentAccount._id,
+    'amount': -amount,
+    'account': currentAccount._id,
+    'date': { $date: new Date() },
+    'uuid': uuidv4()
+  }
+  if (isRecipient) {
+    // Si le destinataire est renseigné
+    let recipient_number = data.recipient
+    if (!recipient_number) {
+      alert("Erreur : Le destinataire doit être renseigné.");
+      return { error: 1, status: 404, data: 'Le destinataire doit être renseigné.' };
+    }
+
+    // On récupère le compte du destinataire
+    let recipient = null;
+    for (let i = 0; i < bankaccounts.length; i++) {
+      if (bankaccounts[i].number === recipient_number) {
+        recipient = bankaccounts[i];
+        break;
+      }
+    }
+
+    if (!recipient) {
+      alert("Erreur : Le destinataire n'existe pas.");
+      return { error: 1, status: 404, data: 'Le destinataire n\'existe pas.' };
+    }
+
+    // On ajout l'argent sur le compte du destinataire (si il existe)
+    recipient.amount += amount;
+    transaction['destination'] = recipient._id;
+  }
+  // On retire l'argent du compte du payeur
+  currentAccount.amount -= amount;
+
+  // On ajoute la transaction
+  transactions.push(transaction);
+
+  return { error: 0, status: 200, data: transaction.uuid };
+}
 
 
 function getUserBasket(userId) {
@@ -306,6 +362,7 @@ export default {
   getAllViruses,
   getAccountAmount,
   getAccountTransactions,
+  operationValidation,
   getAccountTransactionsByNumber,
   getAccount,
   getAccountById,

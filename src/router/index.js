@@ -12,6 +12,7 @@ import ShopPay from '../components/Shop/ShopPay.vue';
 import BankView from '@/views/BankView.vue';
 import BankHome from '../views/BankHome.vue';
 import BankAmount from '@/views/BankAmount.vue';
+import BankOperation from '@/views/BankOperation.vue';
 import BankHistory from '@/views/BankHistory.vue';
 import BankAccount from '@/views/BankAccount.vue';
 import BankLogout from '@/views/BankLogout.vue';
@@ -72,6 +73,11 @@ const routes = [
         path: 'amount',
         name: 'bankAmount',
         component: BankAmount,
+      },
+      {
+        path: 'operation',
+        name: 'bankOperation',
+        component: BankOperation,
       },
       {
         path: 'history',

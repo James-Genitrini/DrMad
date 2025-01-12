@@ -7,10 +7,14 @@ export default {
     accountTransactions: [],
     accountNumberError: 0,
     currentAccount: null,
+    message: "",
   }),
   mutations: {
     updateAccount(state, account) {
       state.currentAccount = account;
+    },
+    updateMessage(state, message) {
+      state.message = message;
     },
     updateAccountAmount(state, amount) {
       state.accountAmount = amount
@@ -77,12 +81,25 @@ export default {
         console.error(response.data);
       }
     },
-    
+
     async bankLogout ({ commit }) {
       try {
         commit('clear')
       } catch (err) {
         console.error(err)
+      }
+    },
+
+    async operationValidation({ commit }, data) {
+      const response = await BankService.operationValidation(data);
+      if (response.error === 0) {
+        let message = "L'opération est validée avec le n° : " + response.data + ". Vous pouvez la retrouver dans l'historique";
+        commit('updateMessage', message);
+        setTimeout(() => {
+          commit('updateMessage', "");
+        }, 5000);
+      } else {
+        console.error(response.data);
       }
     },
   },
