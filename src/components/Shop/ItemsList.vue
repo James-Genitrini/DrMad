@@ -3,7 +3,6 @@
     <div class="shop-buy-left">
       <h1>Liste des Virus</h1>
 
-      <!-- Filtres -->
       <div class="filters">
         <input
           type="text"
@@ -16,6 +15,13 @@
           placeholder="Prix max (€)"
           min="0"
         />
+        <label>
+          En Stock :
+          <input
+            type="checkbox"
+            v-model="filters.inStock"
+          />
+        </label>
         <button @click="resetFilters">Réinitialiser</button>
       </div>
 
@@ -92,6 +98,7 @@ export default {
       filters: {
         name: '',
         maxPrice: null,
+        inStock: false,
       },
     };
   },
@@ -106,7 +113,8 @@ export default {
       return this.viruses.filter(virus => {
         const matchesName = virus.name.toLowerCase().includes(this.filters.name.toLowerCase());
         const matchesPrice = this.filters.maxPrice === null || virus.price <= this.filters.maxPrice;
-        return matchesName && matchesPrice;
+        const matchesStock = !this.filters.inStock || virus.stock > 0;
+        return matchesName && matchesPrice && matchesStock;
       });
     },
   },
