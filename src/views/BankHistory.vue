@@ -1,20 +1,34 @@
 <template>
     <div class="history-wrapper">
         <h1>
-            <slot name="title">Operations passées</slot>
+            <slot name="title">Opérations passées</slot>
         </h1>
-        <label for="periodFilter">Filtrer par période : </label>
-        <input type="checkbox" v-model="periodFilter" id="periodFilter">
+        <div v-if="!filteredTransactions.length === 0">
+            <label for="periodFilter">Filtrer par période : </label>
+            <input type="checkbox" v-model="periodFilter" id="periodFilter">
+        </div>
         <div v-if="periodFilter">
             <label for="start">Du :</label>
             <input type="date" id="start" v-model="start" />
             <label for="end">Au :</label>
             <input type="date" id="end" v-model="end" />
         </div>
-        <DataTable :items="filteredTransactions" :headers="headers" :itemCheck="true" :itemButton="true"
-            :tableButton="true" @itemClicked="showTransactionDetails" @tableClicked="showSelectedTransactions">
+        
+        <div v-if="filteredTransactions.length === 0">
+            <p>Aucune transaction récente à afficher.</p>
+        </div>
+
+        <DataTable 
+            v-else
+            :items="filteredTransactions" 
+            :headers="headers" 
+            :itemCheck="true" 
+            :itemButton="true"
+            :tableButton="true" 
+            @itemClicked="showTransactionDetails" 
+            @tableClicked="showSelectedTransactions">
             <template #item-button>
-                Details
+                Détails
             </template>
             <template #table-button>
                 Voir
@@ -75,10 +89,12 @@ export default {
     methods: {
         ...mapActions('bank', ['getTransactions']),
         showTransactionDetails(item) {
-            navigator.clipboard.writeText(item.uuid)
-            alert(`Transaction UUID: ${item.uuid} \n(l'UUID a été copié dans le presse-papier)`);
+            alert(`Transaction UUID: ${item.uuid}`);
         },
         showSelectedTransactions(selectedItems) {
+            if (!selectedItems.length) {
+                return alert('No transaction selected');
+            }
             alert(`Selected Transactions UUIDs: ${selectedItems.map(item => item.uuid).join(', ')}`);
         },
     },

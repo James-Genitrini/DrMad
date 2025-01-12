@@ -24,7 +24,6 @@ export default {
 .bank-amount {
     padding: 24px;
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 1200px;
@@ -38,7 +37,9 @@ export default {
 }
 
 .amount {
-  color: #1890ff;
-  font-weight: bold;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
 }
 </style>

@@ -4,6 +4,10 @@
             <router-link v-for="link in links" :key="link.to" :to="link.to">
                 <button class="menu-button">{{ link.label }}</button>
             </router-link>
+            <!-- Si l'utilisateur est connecté, afficher son numéro de compte -->
+            <span v-if="currentAccount" class="account-number">
+                Compte: {{ currentAccount.number }}
+            </span>
         </div>
         <VerticalMenu :items="menu" class="vertical-menu">
             <template v-slot:menu-title="{ label }">
@@ -18,10 +22,12 @@
             <router-view>
                 <template v-slot:account-amount>
                     Solde du compte:
-                    <input v-if="0 > currentAccount.amount" type="text" :value="currentAccount.amount"
-                        style="color: red; font-weight: bold;" disabled>
-                    <input v-else type="text" :value="currentAccount.amount" style="color: green; font-weight: bold;"
-                        disabled>
+                    <p v-if="0" class="amount">
+                        {{ currentAccount.amount }}
+                    </p>
+                    <p v-else class="amount"> 
+                        {{ currentAccount.amount }}
+                    </p>
                 </template>
             </router-view>
         </div>
@@ -59,6 +65,11 @@ export default {
 </script>
 
 <style scoped>
+.amount {
+    color: green!important;
+    font-weight: bold!important;
+}
+
 .bank-wrapper {
     display: grid;
     grid-template-rows: auto 1fr;
@@ -106,8 +117,10 @@ export default {
     overflow-y: auto;
 }
 
-.account-id {
-    font-family: monospace;
-    color: #db0000;
+.account-number {
+    font-size: 1.2rem;
+    color: #4CAF50;
+    font-weight: bold;
+    margin-left: 20px;
 }
 </style>

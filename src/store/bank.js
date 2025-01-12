@@ -54,6 +54,7 @@ export default {
         commit('updateAccountNumberError', -1) 
       }
     },
+
     async getAccountTransactionsByNumber({ commit }, number) {
       console.log('récupération des transactions du compte');
       let transactions = await BankService.getAccountTransactionsByNumber(number)
@@ -76,6 +77,7 @@ export default {
         console.error(response.data);
       }
     },
+    
     async bankLogout ({ commit }) {
       try {
         commit('clear')

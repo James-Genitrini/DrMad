@@ -76,7 +76,6 @@ function getAccountAmount(number) {
   if (!number) {
     return { error: 1, status: 404, data: 'aucun numéro de compte fourni' }
   }
-
   let account = bankaccounts.find(e => e.number === number)
   if (account) {
     return { error: 0, status: 200, data: account.amount }
@@ -85,22 +84,20 @@ function getAccountAmount(number) {
   }
 }
 
-
-
-function getAccountTransactions(number) {
-  if (!number) {
-    return { error: 1, status: 404, data: 'aucun numéro de compte fourni' }
+function getAccountTransactions(data) {
+  let account_id = data.account_id
+  if (account_id == null || account_id == "")
+    return
+  let account_transactions = []
+  for (let i = 0; i < transactions.length; i++) {
+    if (transactions[i]["account"] === account_id) {
+      account_transactions.push(transactions[i])
+    }
   }
-
-  let account = bankaccounts.find(e => e.number === number)
-  if (!account) {
-    return { error: 1, status: 404, data: 'compte non trouvé' }
+  if (account_transactions.length > 0) {
+    return { error: 0, status: 200, data: account_transactions }
   }
-
-  let listOfTransaction = transactions.filter(e => e.account === account._id)
-  return { error: 0, status: 200, data: listOfTransaction.map(e => { 
-    return { amount: e.amount, date: e.date, uuid: e.uuid } 
-  })}
+  return { error: 1, status: 404, data: 'No matching transactions found' }
 }
 
 function getAccountTransactionsByNumber(data) {

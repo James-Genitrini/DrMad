@@ -2,7 +2,7 @@
   <div id="app">
     <NavBarHome :titles="titles" @menu-clicked="menuClicked" />
 
-    <h1>Welcome to Peepo's app</h1>
+    <h1>Welcome to Dr Mad !</h1>
 
     <router-view></router-view>
   </div>
@@ -32,7 +32,16 @@ export default {
         this.$router.push('/bank/home');  
       }
     }
+  },
+  // eviter Avoided redundant navigation to current location -> update marche pas
+  watch: {
+    $route(to, from) {
+      if (to.path === from.path) {
+        this.$router.go();
+      }
+    }
   }
+
 };
 </script>
 
